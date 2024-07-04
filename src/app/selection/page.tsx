@@ -40,8 +40,6 @@ const DEV_ENDPOINT =
 const PROD_ENDPOINT =
   "https://rzs6126mm7.execute-api.eu-central-1.amazonaws.com/prod";
 
-  console.log({ test: process.env.NODE_ENV })
-
 const ENDPOINT =
   process.env.NODE_ENV === "production" ? PROD_ENDPOINT : DEV_ENDPOINT;
 

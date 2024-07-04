@@ -1,6 +1,6 @@
 import React from "react";
 import InspirationGenerator from "./components/Contact";
-import Location from "./components/Location";
+import LocationPhotos from "./components/Location";
 import Studio from "./components/Studio";
 import BackgroundCarousel from "./components/BackgroundCarousel";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -178,7 +178,7 @@ const App: React.FC = (props: StaticImages) => {
             Services
           </Typography>
         </Box>
-        <Location images={props.location} />
+        <LocationPhotos images={props.location} />
         <Studio images={props.studio} />
         <InspirationGenerator />
       </Container>

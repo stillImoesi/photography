@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Location = ({ images }: Props) => {
-  return images.length && <Gallery title="On location" photos={images} />;
+  return images.length ? <Gallery title="On location" photos={images} /> : null;
 };
 
 export default Location;
