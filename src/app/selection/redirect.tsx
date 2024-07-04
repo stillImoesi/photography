@@ -6,7 +6,6 @@ import { generateLoginUrl, getWindowCookie } from "src/utils";
 
 interface Props {
   path: string;
-  albumName?: string;
 }
 
 const RedirectToQuery = ({ path }: Props) => {

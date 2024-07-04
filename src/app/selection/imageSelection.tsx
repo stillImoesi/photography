@@ -48,7 +48,7 @@ interface ImageSelectionProps {
     title: string;
     url: string;
   }[];
-  albumName: string;
+  albumTitle: string;
   maxSelectedPics: number;
   idToken: string;
   accessToken: string;
@@ -101,7 +101,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const {
     previouslySelected,
     imageList,
-    albumName,
+    albumTitle,
     endpoint,
     accessToken,
     idToken,
@@ -132,7 +132,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
         },
         body: JSON.stringify({
           imageSelection: selectedPics,
-          title: albumName,
+          title: albumTitle,
         }),
       });
       const response = await res.json();
@@ -231,7 +231,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
       <AppBar position="fixed" sx={{ display: { background: "#000000bd" } }}>
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography variant="h4" component="h4">
-            {`Selection: Album ${albumName}`}
+            {`Selection: Album ${albumTitle}`}
           </Typography>
           <Box sx={{ display: { xs: "block" } }}>
             <Button

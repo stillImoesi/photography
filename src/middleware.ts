@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   const {  nextUrl } = request;
   const urlParams = nextUrl.searchParams;
-  const albumName = urlParams.get("albumName");
+  const albumTitle = urlParams.get("album");
   const accessToken = urlParams.get(ACCESS_TOKEN);
   const idToken = urlParams.get(ID_TOKEN);
 
@@ -45,8 +45,8 @@ export function middleware(request: NextRequest) {
 
   }
 
-  if (albumName) {
-    response.cookies.set('album_name', albumName, { path: '/selection' })
+  if (albumTitle) {
+    response.cookies.set('album_title', albumTitle, { path: '/selection' })
   }
 
   if (accessToken && idToken) {

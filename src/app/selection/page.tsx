@@ -43,14 +43,14 @@ const PROD_ENDPOINT =
 const ENDPOINT =
   process.env.NODE_ENV === "production" ? PROD_ENDPOINT : DEV_ENDPOINT;
 
-const getAlbum = async (accessToken, idToken, albumName) => {
+const getAlbum = async (accessToken, idToken, albumTitle) => {
   const res = await fetch(`${DEV_ENDPOINT}/selection`, {
     cache: "no-cache",
     headers: {
       authorization: accessToken,
       "x-id-token": idToken,
       state: "preview",
-      albumName,
+      albumName: albumTitle,
     },
   });
 
@@ -98,10 +98,10 @@ export default async function Page({
   const accessToken =
     searchParams?.access_token || cookieStore.get("access_token")?.value;
   const idToken = searchParams?.id_token || cookieStore.get("id_token")?.value;
-  const albumName =
-    searchParams?.albumName || cookieStore.get("album_name")?.value;
+  const albumTitle =
+    searchParams?.albumTitle || cookieStore.get("album_title")?.value;
 
-  if (!albumName) {
+  if (!albumTitle) {
     return (
       <div style={{ paddingTop: "30vh", textAlign: "center" }}>
         <Typography variant="h5" align="center" sx={{ marginBottom: "20px" }}>
@@ -129,7 +129,7 @@ export default async function Page({
   let albumResponse: AlbumResponse | undefined;
 
   if (accessToken && idToken) {
-    albumResponse = await getAlbum(accessToken, idToken, albumName);
+    albumResponse = await getAlbum(accessToken, idToken, albumTitle);
     imageUrls = await getSignedUrls(
       albumResponse?.body?.preview,
       accessToken,
@@ -150,7 +150,7 @@ export default async function Page({
         <div key={album.title}>
           <ImageSelectionList
             imageList={imageUrls}
-            albumName={album.title}
+            albumTitle={album.title}
             maxSelectedPics={album.max_allowed_pictures}
             accessToken={accessToken || ''}
             idToken={idToken || ''}
