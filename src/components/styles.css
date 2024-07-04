@@ -1,0 +1,42 @@
+.gallery-carousel .slide div {
+    width: 80vw;
+    height: 300px;
+    max-width: 200px;
+    width: auto;
+}
+
+@media only screen and (max-height: 600px) {
+    .gallery-carousel .slide div {
+        height: 80vh;
+    }
+}
+
+.gallery-carousel .thumb {
+    height: 120px;
+}
+
+.gallery-carousel .slide {
+    min-width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gallery-carousel img{
+    opacity: 0.5;
+    transition: opacity 0.5s ease;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-carousel .slide.selected div {
+    max-width: 250px;
+    height: 375px;
+    width: auto;
+}
+
+.gallery-carousel .slide.selected img {
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
