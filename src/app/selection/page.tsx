@@ -89,6 +89,25 @@ const getSignedUrls = async (
   return imageUrlResponse.body.urls;
 };
 
+const renderWhatsappMessage = (error: string, message: string) => (
+  <div style={{ paddingTop: "30vh", textAlign: "center" }}>
+    <Typography variant="h5" align="center" sx={{ marginBottom: "20px" }}>
+      {error}
+    </Typography>
+    <Link
+      type="button"
+      href={`https://wa.me/+358444919193?text=${message}`}
+      target="_blank"
+    >
+      <img
+        src={whatsApp.src}
+        alt="sent message via whatsapp"
+        style={{ maxWidth: "250px" }}
+      />
+    </Link>
+  </div>
+);
+
 export default async function Page({
   searchParams,
 }: {
@@ -102,23 +121,9 @@ export default async function Page({
     searchParams?.albumTitle || cookieStore.get("album_title")?.value;
 
   if (!albumTitle) {
-    return (
-      <div style={{ paddingTop: "30vh", textAlign: "center" }}>
-        <Typography variant="h5" align="center" sx={{ marginBottom: "20px" }}>
-          No album is provided. Contact Admin below
-        </Typography>
-        <Link
-          type="button"
-          href={`https://wa.me/+358444919193?text=Please can you give me the link to the album`}
-          target="_blank"
-        >
-          <img
-            src={whatsApp.src}
-            alt="sent message via whatsapp"
-            style={{ maxWidth: "250px" }}
-          />
-        </Link>
-      </div>
+    return renderWhatsappMessage(
+      "No album is provided. Contact Admin below",
+      "https://wa.me/+358444919193?text=Please can you give me the link to the album"
     );
   }
 
@@ -130,6 +135,14 @@ export default async function Page({
 
   if (accessToken && idToken) {
     albumResponse = await getAlbum(accessToken, idToken, albumTitle);
+
+    if (albumResponse?.statusCode === 404) {
+      return renderWhatsappMessage(
+        "Invalid Album requested. Contact Admin below",
+        "https://wa.me/+358444919193?text=Please can you give me the link to the album"
+      );
+    }
+
     imageUrls = await getSignedUrls(
       albumResponse?.body?.preview,
       accessToken,
@@ -152,8 +165,8 @@ export default async function Page({
             imageList={imageUrls}
             albumTitle={album.title}
             maxSelectedPics={album.max_allowed_pictures}
-            accessToken={accessToken || ''}
-            idToken={idToken || ''}
+            accessToken={accessToken || ""}
+            idToken={idToken || ""}
             endpoint={ENDPOINT}
             previouslySelected={album.selected_pictures}
           />
