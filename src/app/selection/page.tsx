@@ -118,7 +118,7 @@ export default async function Page({
     searchParams?.access_token || cookieStore.get("access_token")?.value;
   const idToken = searchParams?.id_token || cookieStore.get("id_token")?.value;
   const albumTitle =
-    searchParams?.albumTitle || cookieStore.get("album_title")?.value;
+    searchParams?.album || cookieStore.get("album_title")?.value;
 
   if (!albumTitle) {
     return renderWhatsappMessage(
