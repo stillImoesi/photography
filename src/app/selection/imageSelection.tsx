@@ -111,6 +111,13 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
     ...previouslySelected,
   ]);
 
+  const [imgCols, updateImgCols] = React.useState<number>();
+
+  React.useEffect(() => {
+    console.log({ test: screen.orientation.type });
+    updateImgCols(screen.orientation.type == "landscape-primary" ? 4 : 2);
+  }, []);
+
   const [selectionModalState, handleSelectionModalState] =
     React.useState<boolean>(false);
   const [selectedImage, handleOnSelectedImage] = React.useState<number>(-1);
@@ -153,12 +160,6 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   };
 
   const isSelectedPicsExceeded = selectedPics.length > maxSelectedPics;
-  const imgCols =
-    typeof window === "undefined"
-      ? 4
-      : screen.orientation.type == "landscape-primary"
-      ? 4
-      : 2;
 
   const hideSelectionButton =
     JSON.stringify(selectedPics) === JSON.stringify(previouslySelected) ||
