@@ -152,9 +152,12 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
         window.open(
           `https://wa.me/+358444919193?text=I have selected additional picture more that we agreed. Thanks`
         );
+      } else {
+        window.open(
+          `https://wa.me/+358444919193?text=I have made my selection. Thanks`
+        );
       }
     } catch (e) {
-      console.log({ e });
       throw Error(e.message);
     }
   };
@@ -334,14 +337,14 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
                 preloadNextImg
                 showCloseBtn
                 backdropCloseable
-                onClickNext={(e) =>
+                onClickNext={() => {
                   handleOnSelectedImage(
                     imageList.length - 1 === selectedImage
                       ? selectedImage
-                      : selectedImage - 1
-                  )
-                }
-                onClickPrev={(e) =>
+                      : selectedImage + 1
+                  );
+                }}
+                onClickPrev={() =>
                   handleOnSelectedImage(
                     selectedImage === 0 ? selectedImage : selectedImage - 1
                   )
