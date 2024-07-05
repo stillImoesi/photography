@@ -114,7 +114,6 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const [imgCols, updateImgCols] = React.useState<number>();
 
   React.useEffect(() => {
-    console.log({ test: screen.orientation.type });
     updateImgCols(screen.orientation.type == "landscape-primary" ? 4 : 2);
   }, []);
 
