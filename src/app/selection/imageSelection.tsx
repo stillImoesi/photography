@@ -125,10 +125,10 @@ const renderIconStar = ({
     onClick={() => {
       if (!isSelected) {
         selectedPics.push(item.title);
-        updateSelectedPics([...selectedPics]);
+        updateSelectedPics(selectedPics);
       } else if (isSelected) {
         selectedPics.splice(isSelectedIndex, 1);
-        updateSelectedPics([...selectedPics]);
+        updateSelectedPics(selectedPics);
       }
     }}
   >
@@ -348,10 +348,10 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
                     actionIcon={renderIconStar({
                       item,
                       isSelected,
-                      previouslySelected,
+                      previouslySelected: [...previouslySelected],
                       updateSelectedPics,
                       isSelectedIndex,
-                      selectedPics,
+                      selectedPics: [...selectedPics],
                     })}
                     actionPosition="left"
                   />
@@ -374,11 +374,11 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
               >
                 {renderIconStar({
                   item: previewSelectionItem,
-                  isSelected: previewSelectionItemIndex > 1,
-                  previouslySelected,
+                  isSelected: previewSelectionItemIndex > -1,
+                  previouslySelected: [...previouslySelected],
                   updateSelectedPics,
                   isSelectedIndex: previewSelectionItemIndex,
-                  selectedPics,
+                  selectedPics: [...selectedPics],
                 })}
               </Box>
 
