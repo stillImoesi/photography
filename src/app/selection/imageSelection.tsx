@@ -16,11 +16,13 @@ import {
   Button,
   Fade,
   Modal,
+  Pagination,
   Toolbar,
   Typography,
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import ImgsViewer from "react-images-viewer";
+import { getPaginatedChunk } from "src/utils";
 
 const MODEL_MESSAGE_SELECTION_COMPLETED =
   "Are you sure you want to lock in these selection? Selection cannot be changed later.";
@@ -44,20 +46,57 @@ const modelStyle = {
 };
 
 interface ImageSelectionProps {
-  imageList: {
-    title: string;
-    url: string;
-  }[];
   albumTitle: string;
   maxSelectedPics: number;
   idToken: string;
   accessToken: string;
   endpoint: string;
   previouslySelected: string[];
+  unSignedUrls: string[];
 }
 
 const getIndex = (selectedPics, target) => {
   return selectedPics.findIndex((x) => x === target);
+};
+
+interface Image {
+  url: string;
+  title: string;
+}
+
+interface ImageUrlResponse {
+  statusCode: number;
+  body: {
+    urls: {
+      url: string;
+      title: string;
+    }[];
+  };
+}
+
+const getSignedUrls = async (
+  keys: string[] = [],
+  accessToken: string,
+  idToken: string,
+  endpoint: string
+): Promise<Image[]> => {
+  if (!keys?.length) return [];
+  const res = await fetch(`${endpoint}/get-signed-urls`, {
+    next: { revalidate: 1800 },
+    method: "POST",
+    headers: {
+      authorization: accessToken,
+      "x-id-token": idToken,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      keysForSigning: keys,
+    }),
+  });
+
+  const imageUrlResponse: ImageUrlResponse = (await res.json()) as any;
+
+  return imageUrlResponse?.body?.urls;
 };
 
 const renderIconStar = ({
@@ -100,12 +139,12 @@ const renderIconStar = ({
 export default function ImageSelectionList(props: ImageSelectionProps) {
   const {
     previouslySelected,
-    imageList,
     albumTitle,
     endpoint,
     accessToken,
     idToken,
     maxSelectedPics,
+    unSignedUrls,
   } = props;
   const [selectedPics, updateSelectedPics] = React.useState<string[]>([
     ...previouslySelected,
@@ -120,6 +159,25 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const [selectionModalState, handleSelectionModalState] =
     React.useState<boolean>(false);
   const [selectedImage, handleOnSelectedImage] = React.useState<number>(-1);
+  const [currPage, handleCurrPage] = React.useState<number>(1);
+  const [imageList, updateImageList] = React.useState<Image[]>([]);
+
+  let prevCurrPage = React.useRef(0);
+
+  React.useEffect(() => {
+    if (currPage !== prevCurrPage.current) {
+      getSignedUrls(
+        getPaginatedChunk([...unSignedUrls], currPage),
+        accessToken,
+        idToken,
+        endpoint
+      ).then((res) => {
+        updateImageList(res);
+      });
+      prevCurrPage.current = currPage;
+    }
+  }, [currPage]);
+
   const openImagePreview = selectedImage > -1;
 
   const previewSelectionItem = imageList[selectedImage];
@@ -326,7 +384,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
 
               <ImgsViewer
                 isOpen={openImagePreview}
-                imgs={props.imageList.map((i) => ({
+                imgs={imageList.map((i) => ({
                   src: i.url,
                   srcSet: i.url,
                   caption: i.title,
@@ -353,6 +411,18 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
           )}
         </Suspense>
       </Box>
+      <Pagination
+        count={Math.ceil(unSignedUrls.length / 20)}
+        color="secondary"
+        onClick={(e) =>
+          handleCurrPage(Number.parseInt((e.target as HTMLElement).innerText))
+        }
+        sx={{
+          textAlign: "center",
+          button: { color: "white !important" },
+          ul: { justifyContent: "center" },
+        }}
+      />
     </React.Fragment>
   );
 }

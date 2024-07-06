@@ -16,3 +16,12 @@ export function getWindowCookie(name) {
   }
   return null;
 }
+
+export function getPaginatedChunk<T>(array: T[], pageNumber: number): T[] {
+  console.log({ array, pageNumber })
+  const itemsPerPage = 20;
+  const startIndex = (pageNumber - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  return array.slice(startIndex, endIndex);
+}

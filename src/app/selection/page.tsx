@@ -6,11 +6,6 @@ import { cookies } from "next/headers";
 import { Link, Typography } from "@mui/material";
 import whatsApp from "../../assets/WhatsAppButtonGreenSmall.png";
 
-interface Image {
-  url: string;
-  title: string;
-}
-
 interface AlbumResponse {
   statusCode: number;
   body: {
@@ -25,16 +20,6 @@ interface AlbumResponse {
   };
 }
 
-interface ImageUrlResponse {
-  statusCode: number;
-  body: {
-    urls: {
-      url: string;
-      title: string;
-    }[];
-  };
-}
-
 const DEV_ENDPOINT =
   "https://rzs6126mm7.execute-api.eu-central-1.amazonaws.com/dev";
 const PROD_ENDPOINT =
@@ -44,7 +29,7 @@ const ENDPOINT =
   process.env.NODE_ENV === "production" ? PROD_ENDPOINT : DEV_ENDPOINT;
 
 const getAlbum = async (accessToken, idToken, albumTitle) => {
-  const res = await fetch(`${DEV_ENDPOINT}/selection`, {
+  const res = await fetch(`${ENDPOINT}/selection`, {
     cache: "no-cache",
     headers: {
       authorization: accessToken,
@@ -63,30 +48,6 @@ const getAlbum = async (accessToken, idToken, albumTitle) => {
   }
 
   return res.json();
-};
-
-const getSignedUrls = async (
-  keys: string[] = [],
-  accessToken,
-  idToken
-): Promise<Image[]> => {
-  if (!keys?.length) return [];
-  const res = await fetch(`${DEV_ENDPOINT}/get-signed-urls`, {
-    next: { revalidate: 1800 },
-    method: "POST",
-    headers: {
-      authorization: accessToken,
-      "x-id-token": idToken,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      keysForSigning: keys,
-    }),
-  });
-
-  const imageUrlResponse: ImageUrlResponse = (await res.json()) as any;
-
-  return imageUrlResponse.body.urls;
 };
 
 const renderWhatsappMessage = (error: string, message: string) => (
@@ -120,6 +81,8 @@ export default async function Page({
   const albumTitle =
     searchParams?.album || cookieStore.get("album_title")?.value;
 
+  let unSignedUrls: string[] = [];
+
   if (!albumTitle) {
     return renderWhatsappMessage(
       "No album is provided. Contact Admin below",
@@ -127,10 +90,6 @@ export default async function Page({
     );
   }
 
-  let imageUrls: {
-    url: string;
-    title: string;
-  }[] = [];
   let albumResponse: AlbumResponse | undefined;
 
   if (accessToken && idToken) {
@@ -143,11 +102,7 @@ export default async function Page({
       );
     }
 
-    imageUrls = await getSignedUrls(
-      albumResponse?.body?.preview,
-      accessToken,
-      idToken
-    );
+    unSignedUrls = albumResponse?.body?.preview || [];
   }
 
   const albumProps =
@@ -162,14 +117,15 @@ export default async function Page({
       {albumProps.map((album) => (
         <div key={album.title}>
           <ImageSelectionList
-            imageList={imageUrls}
             albumTitle={album.title}
             maxSelectedPics={album.max_allowed_pictures}
             accessToken={accessToken || ""}
             idToken={idToken || ""}
             endpoint={ENDPOINT}
             previouslySelected={album.selected_pictures}
+            unSignedUrls={unSignedUrls}
           />
+          
         </div>
       ))}
     </>
