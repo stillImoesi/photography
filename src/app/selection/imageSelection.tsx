@@ -234,7 +234,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
       <AppBar position="fixed" sx={{ display: { background: "#000000bd" } }}>
         <Toolbar sx={{ justifyContent: "space-between" }}>
           <Typography variant="h4" component="h4">
-            {`Selection: Album ${albumTitle}`}
+            {`Album: ${albumTitle?.replaceAll("_", " ")}`}
           </Typography>
           <Box sx={{ display: { xs: "block" } }}>
             <Button
@@ -251,7 +251,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
       </AppBar>
       <Toolbar />
       {/* Image selection */}
-      <Box sx={{ margin: "20px 0" }}>
+      <Box sx={{ margin: "40px 0" }}>
         <Suspense fallback={<h1>Loading...</h1>}>
           <ImageList
             cols={imgCols}
