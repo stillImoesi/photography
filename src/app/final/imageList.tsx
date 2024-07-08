@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Button,
-  ImageListItem
-} from "@mui/material";
+import { Box, Button, ImageListItem } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import * as React from "react";
 import ImgsViewer from "react-images-viewer";
@@ -63,6 +59,12 @@ const ImageListComponent = ({ imageList }: ImageListProps) => {
           );
         })}
       </ImageList>
+
+      <ResolutionGuide
+        open={guideOpen}
+        onClose={() => handleGuideOpen(false)}
+        image={imageList[selectedImage]}
+      />
       {/* Image preview Modal */}
       {openImagePreview && (
         <Box>
@@ -80,17 +82,19 @@ const ImageListComponent = ({ imageList }: ImageListProps) => {
             }}
           >
             <Button
-                variant="contained"
-                aria-label="open resolution guide"
-                startIcon={<DownloadIcon />}
-                color="success"
-                onClick={() => handleGuideOpen(true)}
-              >
-                Download
-              </Button>
+              variant="contained"
+              aria-label="open resolution guide"
+              startIcon={<DownloadIcon />}
+              color="success"
+              onClick={() => {
+                handleGuideOpen(true);
+              }}
+            >
+              Download
+            </Button>
           </Box>
-
           <ImgsViewer
+            preventScroll={false}
             isOpen={openImagePreview}
             imgs={imageList.map((i) => ({
               src: i.url,
@@ -116,11 +120,6 @@ const ImageListComponent = ({ imageList }: ImageListProps) => {
           />
         </Box>
       )}
-      <ResolutionGuide
-        open={guideOpen}
-        onClose={() => handleGuideOpen(false)}
-        image={imageList[selectedImage]}  
-      />
     </>
   );
 };

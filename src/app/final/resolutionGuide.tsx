@@ -4,7 +4,6 @@ import {
   Box,
   Typography,
   Drawer,
-  List,
   ListItem,
   ListItemText,
   Grid,
@@ -28,15 +27,19 @@ const imageSty = { filter: "grayscale(100)", width: "80%", marginLeft: "auto" };
 
 const Guide = ({ open, onClose, image }: GuideProps) => {
   return (
-    <Drawer anchor="bottom" open={open} onClose={onClose} sx={{ zIndex: 2002 }}>
+    <Drawer
+      anchor="bottom"
+      open={open}
+      onClose={onClose}
+      sx={{ zIndex: 2003 }}
+    >
       <Box
         sx={{
-            width: 'auto',
+          width: "auto",
           padding: 2,
           textAlign: "center",
           margin: "auto",
-          height: { xs: "70vh", sm: "60vh" },
-          overflowY: "scroll",
+          height: { xs: "70vh", sm: "60vh" }
         }}
       >
         <Typography variant="h5" gutterBottom>
@@ -82,7 +85,12 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
                 aria-label="download high resolution"
                 color="secondary"
                 startIcon={<DownloadIcon />}
-                onClick={() => window.open(`https://wa.me/+358444919193?text=I will like to have the high (33mp) resolution for this image ${image?.title}`, "_blank")}
+                onClick={() =>
+                  window.open(
+                    `https://wa.me/+358444919193?text=I will like to have the high (33mp) resolution for this image ${image?.title}`,
+                    "_blank"
+                  )
+                }
               >
                 High {"€14.99"}
               </Button>
@@ -109,17 +117,18 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
                 color="warning"
                 aria-label="download max resolution"
                 startIcon={<DownloadIcon />}
-                onClick={() => window.open(`https://wa.me/+358444919193?text=I will like to have the max resolution (131mp) for this image ${image?.title}`, "_blank")}
+                onClick={() =>
+                  window.open(
+                    `https://wa.me/+358444919193?text=I will like to have the max resolution (131mp) for this image ${image?.title}`,
+                    "_blank"
+                  )
+                }
               >
                 Max {"€19.99"}
               </Button>
             </ListItem>
             <ListItem>
-              <img
-                src={max.src}
-                alt="Max Resolution"
-                style={imageSty}
-              />
+              <img src={max.src} alt="Max Resolution" style={imageSty} />
             </ListItem>
           </Grid>
         </Grid>
