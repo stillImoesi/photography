@@ -42,8 +42,8 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
           height: { xs: "70vh", sm: "60vh" }
         }}
       >
-        <Typography variant="h5" gutterBottom>
-          Image Print Guide
+        <Typography variant="h6" gutterBottom>
+          Choose preferred download resolution
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
