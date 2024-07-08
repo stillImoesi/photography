@@ -36,6 +36,7 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
           textAlign: "center",
           margin: "auto",
           height: { xs: "70vh", sm: "60vh" },
+          overflowY: "scroll",
         }}
       >
         <Typography variant="h5" gutterBottom>
