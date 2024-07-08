@@ -1,73 +1,12 @@
 import Layout from "../layout";
-import RedirectToQuery from "./redirect";
-import { redirect } from "next/navigation";
+import RedirectToQuery from "../../components/redirect";
 import ImageSelectionList from "./imageSelection";
 import { cookies } from "next/headers";
-import { Link, Typography } from "@mui/material";
-import whatsApp from "../../assets/WhatsAppButtonGreenSmall.png";
-
-interface AlbumResponse {
-  statusCode: number;
-  body: {
-    preview: string[];
-    albumProps: {
-      [key: string]: {
-        title: string;
-        max_allowed_pictures: number;
-        selected_pictures: string[];
-      };
-    };
-  };
-}
-
-const DEV_ENDPOINT =
-  "https://rzs6126mm7.execute-api.eu-central-1.amazonaws.com/dev";
-const PROD_ENDPOINT =
-  "https://rzs6126mm7.execute-api.eu-central-1.amazonaws.com/prod";
-
-const ENDPOINT =
-  process.env.NODE_ENV === "production" ? PROD_ENDPOINT : DEV_ENDPOINT;
-
-const getAlbum = async (accessToken, idToken, albumTitle) => {
-  const res = await fetch(`${ENDPOINT}/selection`, {
-    cache: "no-cache",
-    headers: {
-      authorization: accessToken,
-      "x-id-token": idToken,
-      state: "preview",
-      albumName: albumTitle,
-    },
-  });
-
-  if (!res.ok) {
-    if (res.status == 401) {
-      redirect("/login?redirect=/selection");
-    } else {
-      throw new Error("Failed to fetch data");
-    }
-  }
-
-  return res.json();
-};
-
-const renderWhatsappMessage = (error: string, message: string) => (
-  <div style={{ paddingTop: "30vh", textAlign: "center" }}>
-    <Typography variant="h5" align="center" sx={{ marginBottom: "20px" }}>
-      {error}
-    </Typography>
-    <Link
-      type="button"
-      href={`https://wa.me/+358444919193?text=${message}`}
-      target="_blank"
-    >
-      <img
-        src={whatsApp.src}
-        alt="sent message via whatsapp"
-        style={{ maxWidth: "250px" }}
-      />
-    </Link>
-  </div>
-);
+import { AlbumResponse } from "src/utils/type";
+import { ENDPOINT } from "src/utils/config";
+import { getAlbum } from "src/utils/apis";
+import WhatsAppErrorMessage from "src/components/WhatsAppError";
+import { addDays } from "src/utils";
 
 export default async function Page({
   searchParams,
@@ -84,21 +23,30 @@ export default async function Page({
   let unSignedUrls: string[] = [];
 
   if (!albumTitle) {
-    return renderWhatsappMessage(
-      "No album is provided. Contact Admin below",
-      "https://wa.me/+358444919193?text=Please can you give me the link to the album"
+    return (
+      <WhatsAppErrorMessage
+        error="No album is provided. Contact Admin below"
+        message="Please can you give me the link to the album"
+      />
     );
   }
 
   let albumResponse: AlbumResponse | undefined;
 
   if (accessToken && idToken) {
-    albumResponse = await getAlbum(accessToken, idToken, albumTitle);
+    albumResponse = await getAlbum(
+      accessToken,
+      idToken,
+      albumTitle,
+      "selection"
+    );
 
     if (albumResponse?.statusCode === 404) {
-      return renderWhatsappMessage(
-        "Invalid Album requested. Contact Admin below",
-        "https://wa.me/+358444919193?text=Please can you give me the link to the album"
+      return (
+        <WhatsAppErrorMessage
+          error="Invalid Album requested. Contact Admin below"
+          message="Please can you give me the link to the album"
+        />
       );
     }
 
@@ -124,8 +72,9 @@ export default async function Page({
             endpoint={ENDPOINT}
             previouslySelected={album.selected_pictures}
             unSignedUrls={unSignedUrls}
+            status={album.album_status}
+            albumExpiry={addDays(album.created_at || "")}
           />
-          
         </div>
       ))}
     </>

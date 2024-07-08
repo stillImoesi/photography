@@ -5,6 +5,13 @@ export const generateLoginUrl = (origin: string, path: string, ) => {
 return `${cognitorBase}${origin}${path}`;
 };
 
+export const generateLogoutUrl = (origin: string, path: string, ) => {
+  const cognitorBase =
+    "https://sp-photos.auth.eu-central-1.amazoncognito.com/logout?client_id=11lc7bascotnru1bacuo0346pu&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+profile&redirect_uri=";
+
+return `${cognitorBase}${origin}${path}`;
+};
+
 
 export function getWindowCookie(name) {
   const nameEQ = name + "=";
@@ -23,4 +30,10 @@ export function getPaginatedChunk<T>(array: T[], pageNumber: number): T[] {
   const endIndex = startIndex + itemsPerPage;
 
   return array.slice(startIndex, endIndex);
+}
+
+export function addDays(date) {
+  let result = new Date(date);
+  result.setDate(result.getDate() + 30);
+  return result;
 }

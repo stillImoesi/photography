@@ -46,7 +46,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (albumTitle) {
-    response.cookies.set('album_title', albumTitle, { path: '/selection' })
+    response.cookies.set('album_title', albumTitle)
   }
 
   if (accessToken && idToken) {

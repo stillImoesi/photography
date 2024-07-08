@@ -15,6 +15,7 @@ import {
   Box,
   Button,
   Fade,
+  Link,
   Modal,
   Pagination,
   Toolbar,
@@ -23,13 +24,16 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import ImgsViewer from "react-images-viewer";
 import { getPaginatedChunk } from "src/utils";
+import { Image } from "src/utils/type";
+import Countdown from "react-countdown";
+import { getSignedUrls } from "src/utils/apis";
 
 const MODEL_MESSAGE_SELECTION_COMPLETED =
   "Are you sure you want to lock in these selection? Selection cannot be changed later.";
 const MODEL_MESSAGE_SELECTION_RANGE_EXCEEDED =
   "You have selected more that the images allocated to you :). Photographer will be notified. Do you want to lock in these selection?";
 const MODEL_MESSAGE_SELECTION_ADDING_TO_PREVIOUSLY_SELECTED =
-  "You are adding more pictures to the onces you have previously selected :). Photographer will be notified. Do you want to lock in these selection?";
+  "You are adding more pictures to the onces you have previously selected :). Photographer will be notified. Do you want to lock in these selection for additional fee of 35€ / photo?";
 
 const modelStyle = {
   position: "absolute" as "absolute",
@@ -53,87 +57,87 @@ interface ImageSelectionProps {
   endpoint: string;
   previouslySelected: string[];
   unSignedUrls: string[];
+  status?: string;
+  albumExpiry: Date;
 }
 
 const getIndex = (selectedPics, target) => {
   return selectedPics.findIndex((x) => x === target);
 };
 
-interface Image {
-  url: string;
-  title: string;
-}
-
-interface ImageUrlResponse {
-  statusCode: number;
-  body: {
-    urls: {
+const RenderIconStar = React.memo(
+  ({
+    item,
+    isSelected,
+    selectedPics,
+    previouslySelected,
+    updateSelectedPics,
+    isSelectedIndex,
+    disabledEditing,
+  }: {
+    item: {
       url: string;
       title: string;
-    }[];
-  };
-}
+    };
+    isSelected: boolean;
+    selectedPics: string[];
+    previouslySelected: string[];
+    updateSelectedPics: (pics: string[]) => void;
+    isSelectedIndex: number;
+    disabledEditing: boolean;
+  }) => (
+    <IconButton
+      sx={{ color: "white", fill: "red" }}
+      color="success"
+      aria-label={`star ${item.url}`}
+      disabled={previouslySelected.includes(item.title) || disabledEditing}
+      onClick={() => {
+        if (!isSelected) {
+          selectedPics.push(item.title);
+          updateSelectedPics(selectedPics);
+        } else if (isSelected) {
+          selectedPics.splice(isSelectedIndex, 1);
+          updateSelectedPics(selectedPics);
+        }
+      }}
+    >
+      {isSelected ? <StarFilledIcon /> : <StarBorderIcon />}
+    </IconButton>
+  )
+);
 
-const getSignedUrls = async (
-  keys: string[] = [],
-  accessToken: string,
-  idToken: string,
-  endpoint: string
-): Promise<Image[]> => {
-  if (!keys?.length) return [];
-  const res = await fetch(`${endpoint}/get-signed-urls`, {
-    next: { revalidate: 1800 },
-    method: "POST",
-    headers: {
-      authorization: accessToken,
-      "x-id-token": idToken,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      keysForSigning: keys,
-    }),
-  });
+const RenderProgressStatus = React.memo(
+  ({ status, albumTitle }: { status?: string; albumTitle: string }) => {
+    const typographyProps = {
+      sx: {
+        typography: { xs: "body" },
+        textDecoration: "underline",
+        textAlign: "center",
+      },
+    };
+    const progressMessage = (
+      <Typography {...typographyProps}>
+        Photographer is working on your pictures. You will be notified when they
+        are ready
+      </Typography>
+    );
 
-  const imageUrlResponse: ImageUrlResponse = (await res.json()) as any;
+    const completedMessage = (
+      <Typography {...typographyProps}>
+        Picture are complete and ready for download. Click{" "}
+        <Link href={`/final?album=${albumTitle}`}>here</Link>
+      </Typography>
+    );
 
-  return imageUrlResponse?.body?.urls;
-};
-
-const renderIconStar = ({
-  item,
-  isSelected,
-  selectedPics,
-  previouslySelected,
-  updateSelectedPics,
-  isSelectedIndex,
-}: {
-  item: {
-    url: string;
-    title: string;
-  };
-  isSelected: boolean;
-  selectedPics: string[];
-  previouslySelected: string[];
-  updateSelectedPics: (pics: string[]) => void;
-  isSelectedIndex: number;
-}) => (
-  <IconButton
-    sx={{ color: "white", fill: "red" }}
-    color="success"
-    aria-label={`star ${item.url}`}
-    disabled={previouslySelected.includes(item.title)}
-    onClick={() => {
-      if (!isSelected) {
-        selectedPics.push(item.title);
-        updateSelectedPics(selectedPics);
-      } else if (isSelected) {
-        selectedPics.splice(isSelectedIndex, 1);
-        updateSelectedPics(selectedPics);
-      }
-    }}
-  >
-    {isSelected ? <StarFilledIcon /> : <StarBorderIcon />}
-  </IconButton>
+    if (status) {
+      return (
+        <Toolbar sx={{ justifyContent: "center" }}>
+            {status === "progress" ? progressMessage :status === "completed" ? completedMessage : null}
+        </Toolbar>
+      );
+    }
+    return null;
+  }
 );
 
 export default function ImageSelectionList(props: ImageSelectionProps) {
@@ -145,14 +149,19 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
     idToken,
     maxSelectedPics,
     unSignedUrls,
+    albumExpiry,
   } = props;
   const [selectedPics, updateSelectedPics] = React.useState<string[]>([
     ...previouslySelected,
   ]);
 
+  const [disabledEditing, handleDisableEditing] =
+    React.useState<boolean>(false);
   const [imgCols, updateImgCols] = React.useState<number>();
+  const [windowLoaded, setWindowLoadingValue] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    setWindowLoadingValue(true);
     updateImgCols(screen.orientation.type == "landscape-primary" ? 4 : 2);
   }, []);
 
@@ -180,11 +189,11 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
 
   const openImagePreview = selectedImage > -1;
 
-  const previewSelectionItem = imageList[selectedImage];
+  const previewSelectionItem = imageList?.[selectedImage];
   const previewSelectionItemIndex =
     previewSelectionItem && getIndex(selectedPics, previewSelectionItem.title);
 
-  const submitImageSelection = async () => {
+  const submitImageSelection = React.useCallback(async () => {
     try {
       const res = await fetch(`${endpoint}/selection`, {
         next: { revalidate: 1800 },
@@ -217,13 +226,18 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
     } catch (e) {
       throw Error(e.message);
     }
-  };
+  }, [selectedPics]);
 
   const isSelectedPicsExceeded = selectedPics.length > maxSelectedPics;
 
-  const hideSelectionButton =
-    JSON.stringify(selectedPics) === JSON.stringify(previouslySelected) ||
-    selectedPics.length < maxSelectedPics;
+  const hideSelectionButton = React.useCallback(
+    () =>
+      Boolean(
+        JSON.stringify(selectedPics) === JSON.stringify(previouslySelected) ||
+          selectedPics.length < maxSelectedPics
+      ),
+    [selectedPics]
+  );
 
   return (
     <React.Fragment>
@@ -291,26 +305,38 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
       {/* Top Menu */}
       <AppBar position="fixed" sx={{ display: { background: "#000000bd" } }}>
         <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Typography variant="h4" component="h4">
+          <Typography sx={{ typography: { sm: "h4", xs: "h6" } }}>
             {`Album: ${albumTitle?.replaceAll("_", " ")}`}
           </Typography>
           <Box sx={{ display: { xs: "block" } }}>
-            <Button
-              variant="contained"
-              onClick={() => handleSelectionModalState(true)}
-              disabled={hideSelectionButton}
-              color="secondary"
-            >
-              {`Select ${selectedPics.length}/${maxSelectedPics}`}
-              {isSelectedPicsExceeded && <PriorityHighIcon />}
-            </Button>
+            {hideSelectionButton() ? (
+              windowLoaded ? (
+                <Typography sx={{ typography: "h6" }}>
+                  Selection will be disabled in{" "}
+                  <Countdown
+                    date={albumExpiry}
+                    onComplete={() => handleDisableEditing(false)}
+                  />
+                </Typography>
+              ) : null
+            ) : (
+              <Button
+                variant="contained"
+                onClick={() => handleSelectionModalState(true)}
+                color="secondary"
+                disabled={disabledEditing}
+              >
+                {`Select ${selectedPics.length}/${maxSelectedPics}`}
+                {isSelectedPicsExceeded && <PriorityHighIcon />}
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
-      <Toolbar />
       {/* Image selection */}
-      <Box sx={{ margin: "40px 0" }}>
+      <Box sx={{ marginTop: "64px" }}>
         <Suspense fallback={<h1>Loading...</h1>}>
+          <RenderProgressStatus status={props.status} albumTitle={albumTitle} />
           <ImageList
             cols={imgCols}
             sx={{
@@ -320,7 +346,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
             gap={18}
             variant="masonry"
           >
-            {imageList.map((item, imageIndex) => {
+            {imageList?.map((item, imageIndex) => {
               const cols = 1;
               const rows = 1;
               const isSelectedIndex = getIndex(selectedPics, item.title);
@@ -345,14 +371,17 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
                     }}
                     title={item.title}
                     position="top"
-                    actionIcon={renderIconStar({
-                      item,
-                      isSelected,
-                      previouslySelected: [...previouslySelected],
-                      updateSelectedPics,
-                      isSelectedIndex,
-                      selectedPics: [...selectedPics],
-                    })}
+                    actionIcon={
+                      <RenderIconStar
+                        item={item}
+                        isSelected={isSelected}
+                        selectedPics={[...selectedPics]}
+                        previouslySelected={[...previouslySelected]}
+                        updateSelectedPics={updateSelectedPics}
+                        isSelectedIndex={isSelectedIndex}
+                        disabledEditing={disabledEditing}
+                      />
+                    }
                     actionPosition="left"
                   />
                 </ImageListItem>
@@ -372,14 +401,15 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
                   background: "#0000003d",
                 }}
               >
-                {renderIconStar({
-                  item: previewSelectionItem,
-                  isSelected: previewSelectionItemIndex > -1,
-                  previouslySelected: [...previouslySelected],
-                  updateSelectedPics,
-                  isSelectedIndex: previewSelectionItemIndex,
-                  selectedPics: [...selectedPics],
-                })}
+                <RenderIconStar
+                  item={previewSelectionItem}
+                  isSelected={previewSelectionItemIndex > -1}
+                  selectedPics={[...selectedPics]}
+                  previouslySelected={[...previouslySelected]}
+                  updateSelectedPics={updateSelectedPics}
+                  isSelectedIndex={previewSelectionItemIndex}
+                  disabledEditing={disabledEditing}
+                />
               </Box>
 
               <ImgsViewer
