@@ -2,7 +2,7 @@ import '../index.css'
 import type { Metadata } from 'next'
  
 export const metadata: Metadata = {
-  title: 'React App',
+  title: 'StillPeter Photography',
   description: 'Photographer based in Vantaa',
 }
 
