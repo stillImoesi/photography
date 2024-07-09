@@ -64,7 +64,7 @@ export default async function Page({
 
   return (
     <>
-      <RedirectToQuery path="/final" />
+      <RedirectToQuery target="final" />
       <Box>
         {albumProps.map((album) => (
           <div key={album.title}>

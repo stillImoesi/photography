@@ -49,9 +49,11 @@ export function middleware(request: NextRequest) {
     response.cookies.set('album_title', albumTitle)
   }
 
+  const oneHr = 60 * 60 * 1000;
+
   if (accessToken && idToken) {
-    response.cookies.set(ID_TOKEN, idToken)
-    response.cookies.set(ACCESS_TOKEN, accessToken);
+    response.cookies.set(ID_TOKEN, idToken, { expires: Date.now() + oneHr })
+    response.cookies.set(ACCESS_TOKEN, accessToken, { expires: Date.now() + oneHr });
   }
 
   return response;

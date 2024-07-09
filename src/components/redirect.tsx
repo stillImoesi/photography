@@ -5,10 +5,10 @@ import { useEffect } from "react";
 import { generateLoginUrl, getWindowCookie } from "src/utils";
 
 interface Props {
-  path: string;
+  target: string;
 }
 
-const RedirectToQuery = ({ path }: Props) => {
+const RedirectToQuery = ({ target }: Props) => {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -21,7 +21,7 @@ const RedirectToQuery = ({ path }: Props) => {
         const newUrl = `${location.pathname}?${queryString}`;
         location.replace(newUrl);
       } else if (!getWindowCookie('access_token') || !getWindowCookie('id_token')) {
-        location.replace(generateLoginUrl( location.origin, path));
+        location.replace(generateLoginUrl( location.origin, `/${target}`));
       }
     }
   }, []);

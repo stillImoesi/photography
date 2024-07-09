@@ -151,6 +151,11 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
     unSignedUrls,
     albumExpiry,
   } = props;
+
+  const [alreadySelectedPictures, updateAlreadySelectedPictures] = React.useState<string[]>([
+    ...previouslySelected
+  ]);
+
   const [selectedPics, updateSelectedPics] = React.useState<string[]>([
     ...previouslySelected,
   ]);
@@ -223,6 +228,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
           `https://wa.me/+358444919193?text=I have made my selection. Thanks`
         );
       }
+      updateAlreadySelectedPictures(selectedPics)
     } catch (e) {
       throw Error(e.message);
     }
@@ -233,10 +239,10 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const hideSelectionButton = React.useCallback(
     () =>
       Boolean(
-        JSON.stringify(selectedPics) === JSON.stringify(previouslySelected) ||
+        JSON.stringify(selectedPics) === JSON.stringify(alreadySelectedPictures) ||
           selectedPics.length < maxSelectedPics
       ),
-    [selectedPics]
+    [selectedPics, alreadySelectedPictures]
   );
 
   return (

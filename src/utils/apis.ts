@@ -4,7 +4,7 @@ import { Image, ImageUrlResponse } from "./type";
 
 export const getAlbum = async (accessToken, idToken, albumTitle, referrer) => {
   const res = await fetch(`${ENDPOINT}/selection`, {
-    next: { revalidate: 1800 },
+    next: { revalidate: 3600 },
     headers: {
       authorization: accessToken,
       "x-id-token": idToken,

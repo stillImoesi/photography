@@ -8,6 +8,8 @@ import { getAlbum } from "src/utils/apis";
 import WhatsAppErrorMessage from "src/components/WhatsAppError";
 import { addDays } from "src/utils";
 
+const PATH = "selection";
+
 export default async function Page({
   searchParams,
 }: {
@@ -38,7 +40,7 @@ export default async function Page({
       accessToken,
       idToken,
       albumTitle,
-      "selection"
+      PATH
     );
 
     if (albumResponse?.statusCode === 404) {
@@ -53,7 +55,7 @@ export default async function Page({
     unSignedUrls = albumResponse?.body?.preview || [];
   }
 
-  const albumProps =
+  const albums =
     (albumResponse?.body?.albumProps &&
       Object.values(albumResponse.body?.albumProps)) ||
     [];
@@ -61,8 +63,8 @@ export default async function Page({
   return (
     <>
       {/* check for hash key in url */}
-      <RedirectToQuery path="/selection" />
-      {albumProps.map((album) => (
+      <RedirectToQuery target={PATH} />
+      {albums.map((album) => (
         <div key={album.title}>
           <ImageSelectionList
             albumTitle={album.title}

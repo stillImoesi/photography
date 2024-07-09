@@ -1,3 +1,15 @@
+export interface Album {
+  title: string;
+  max_allowed_pictures: number;
+  selected_pictures: string[];
+  album_status?: "draft" | "progress" | "completed";
+  created_at: string;
+}
+
+interface AlbumData {
+  [key: string]: Album;
+}
+
 export interface AlbumResponse {
   statusCode: number;
   body: {
@@ -7,15 +19,7 @@ export interface AlbumResponse {
       high: string[];
       max: string[];
     };
-    albumProps: {
-      [key: string]: {
-        title: string;
-        max_allowed_pictures: number;
-        selected_pictures: string[];
-        album_status?: "draft" | "progress" | "completed";
-        created_at: string;
-      };
-    };
+    albumProps: AlbumData;
   };
 }
 
