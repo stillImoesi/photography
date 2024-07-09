@@ -81,17 +81,19 @@ const ImageListComponent = ({ imageList }: ImageListProps) => {
               },
             }}
           >
-            <Button
-              variant="contained"
-              aria-label="open resolution guide"
-              startIcon={<DownloadIcon />}
-              color="success"
-              onClick={() => {
-                handleGuideOpen(true);
-              }}
-            >
-              Download
-            </Button>
+            <a download={"test"} href={imageList[selectedImage]?.url}>
+              <Button
+                variant="contained"
+                aria-label="open resolution guide"
+                startIcon={<DownloadIcon />}
+                color="success"
+                onClick={() => {
+                  handleGuideOpen(true);
+                }}
+              >
+                Download
+              </Button>
+            </a>
           </Box>
           <ImgsViewer
             preventScroll={false}

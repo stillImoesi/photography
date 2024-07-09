@@ -13,6 +13,7 @@ import normal from "../../assets/resolutionGuide/normal.webp";
 import high from "../../assets/resolutionGuide/high.webp";
 import max from "../../assets/resolutionGuide/max.webp";
 import DownloadIcon from "@mui/icons-material/DownloadOutlined";
+import PrintIcon from "@mui/icons-material/Print";
 
 interface GuideProps {
   open: boolean;
@@ -27,41 +28,41 @@ const imageSty = { filter: "grayscale(100)", width: "80%", marginLeft: "auto" };
 
 const Guide = ({ open, onClose, image }: GuideProps) => {
   return (
-    <Drawer
-      anchor="bottom"
-      open={open}
-      onClose={onClose}
-      sx={{ zIndex: 2003 }}
-    >
+    <Drawer anchor="bottom" open={open} onClose={onClose} sx={{ zIndex: 2003 }}>
       <Box
         sx={{
           width: "auto",
           padding: 2,
           textAlign: "center",
           margin: "auto",
-          height: { xs: "70vh", sm: "60vh" }
+          height: { xs: "70vh", sm: "60vh" },
         }}
       >
-        <Typography variant="h6" gutterBottom>
-          Choose preferred download resolution
-        </Typography>
+        <Box>
+          <Typography variant="h6" gutterBottom>
+            Choose preferred print sizes
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            Prints let you see an enlarged perspective of your picture and
+            appreciate the minor details and overall beauty of the image. They
+            can also act as fine deco for your home.
+          </Typography>
+        </Box>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={4}>
             <ListItem>
               <ListItemText
-                primary="Normal Resolution (2.9 MP)"
-                secondary="Print Size at 300 PPI: 6.83 x 4.55 inches"
+                primary="15cm x 20cm"
+                secondary="Perfect for your work table or shelf. Excellent deco items"
               />
-              <a download={"test"} href={image?.url}>
-                <Button
-                  variant="contained"
-                  aria-label="download normal resolution"
-                  startIcon={<DownloadIcon />}
-                  color="success"
-                >
-                  Normal
-                </Button>
-              </a>
+              <Button
+                variant="outlined"
+                aria-label="Print normal photo"
+                startIcon={<PrintIcon />}
+                color="success"
+              >
+                Normal {"€24.99"}
+              </Button>
             </ListItem>
             <ListItem>
               <img
@@ -76,15 +77,15 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
           <Grid item xs={12} sm={4}>
             <ListItem>
               <ListItemText
-                primary="High Resolution (33 MP)"
-                secondary="Print Size at 300 PPI: 23.36 x 15.57 inches"
+                primary="50cm x 70cm"
+                secondary="Comes in black, white or silver frame. Perfect for wall mounting"
               />
 
               <Button
                 variant="outlined"
-                aria-label="download high resolution"
+                aria-label="print large photo"
                 color="secondary"
-                startIcon={<DownloadIcon />}
+                startIcon={<PrintIcon />}
                 onClick={() =>
                   window.open(
                     `https://wa.me/+358444919193?text=I will like to have the high (33mp) resolution for this image ${image?.title}`,
@@ -92,7 +93,7 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
                   )
                 }
               >
-                High {"€14.99"}
+                Large {"€64.99"}
               </Button>
             </ListItem>
             <ListItem>
@@ -108,15 +109,14 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
           <Grid item xs={12} sm={4}>
             <ListItem>
               <ListItemText
-                primary="Max Resolution (131 MP)"
-                secondary="Print Size at 300 PPI: 46.72 x 31.15 inches"
+                primary="70cm x 100xm"
+                secondary="For photos you are in love with. Center of attaction in your home"
               />
-
               <Button
                 variant="outlined"
                 color="warning"
-                aria-label="download max resolution"
-                startIcon={<DownloadIcon />}
+                aria-label="print extra large photo"
+                startIcon={<PrintIcon />}
                 onClick={() =>
                   window.open(
                     `https://wa.me/+358444919193?text=I will like to have the max resolution (131mp) for this image ${image?.title}`,
@@ -124,7 +124,7 @@ const Guide = ({ open, onClose, image }: GuideProps) => {
                   )
                 }
               >
-                Max {"€19.99"}
+                Massive {"€149.99"}
               </Button>
             </ListItem>
             <ListItem>
