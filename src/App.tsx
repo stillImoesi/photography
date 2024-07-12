@@ -1,5 +1,5 @@
 import React from "react";
-import InspirationGenerator from "./components/Contact";
+import Contact from "./components/Contact";
 import LocationPhotos from "./components/Location";
 import Studio from "./components/Studio";
 import BackgroundCarousel from "./components/BackgroundCarousel";
@@ -19,6 +19,7 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
+  Link,
 } from "@mui/material";
 
 interface Images {
@@ -32,21 +33,21 @@ interface StaticImages {
 }
 
 const NavLinks = [
-  {
-    title: "Services",
-    url: "#Services",
-  },
-  {
-    title: "About",
-    url: "#About",
-  },
-  {
-    title: "Prices",
-    url: "#Prices",
-  },
+  // {
+  //   title: "About",
+  //   url: "#About",
+  // },
+  // {
+  //   title: "Prices",
+  //   url: "#Prices",
+  // },
   {
     title: "Contact",
-    url: "/Contact",
+    url: "#contact",
+  },
+  {
+    title: "Login",
+    url: "/login?redirect=/selection",
   },
 ];
 
@@ -73,7 +74,9 @@ const App: React.FC = (props: StaticImages) => {
             {NavLinks.map((lk) => (
               <ListItem key={lk.url} disablePadding>
                 <ListItemButton>
-                  <ListItemText primary={lk.title} />
+                  <Link href={lk.url} variant="body2">
+                    <ListItemText primary={lk.title} />
+                  </Link>
                 </ListItemButton>
               </ListItem>
             ))}
@@ -91,7 +94,9 @@ const App: React.FC = (props: StaticImages) => {
               color="inherit"
               sx={{ display: { xs: "none", md: "block" } }}
             >
-              {lk.title}
+              <Link href={lk.url} variant="inherit" sx={{ color: "#fff" }}>
+                <ListItemText primary={lk.title} />
+              </Link>
             </Button>
           ))}
           <IconButton
@@ -155,7 +160,9 @@ const App: React.FC = (props: StaticImages) => {
                   borderColor: { xs: "white", md: "black" },
                 }}
               >
-                Book Now
+                <Link href="#contact" variant="inherit" sx={{ color: "black", textDecoration: "none" }}>
+                  Book Now
+                </Link>
               </Button>
             </Grid>
           </Grid>
@@ -180,7 +187,7 @@ const App: React.FC = (props: StaticImages) => {
         </Box>
         <LocationPhotos images={props.location} />
         <Studio images={props.studio} />
-        <InspirationGenerator />
+        <Contact />
       </Container>
 
       <Box
