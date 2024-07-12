@@ -1,46 +1,52 @@
-# Getting Started with Create React App
+# Still Peter studio
+## Business model
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Backend logic
+- AWS lambda functions
+- S3 for asset storage
+- DynamoDB for database
+- Cognito for user authentication (User pool)
 
-## Available Scripts
+### Picture upload
+    - Pictures will be uploaded to S3
+        - Folder will be created in S3
+        - User Email name will be saved to Database Album table
+            - Lambda function is triggered when root folder is created
+            - Lambda function creates a new row in the Album DB 
 
-In the project directory, you can run:
+        - Pictures will be uploaded to folder in S3 (Local env)
+            - New additional folder normal(x0.5), high (x1), extra(x4) will be created
+            - normal, high and extra resolutionS pictures will be uploaded
 
-### `yarn start`
+### Database
+    - All picture upload is a new entry to database
+    - Tables
+        - Album
+            - ID
+            - Album name
+            - MaxAllowPictures,
+            - SelectedPictures - Array of strings
+            - Email
+        - Payments
+            - Payment ID
+            - Receipt ID
+            - Picture ID
+            - Ablum ID
+            - Price
+            - Res
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### After payment
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Pictures will be previewed will additional links to buy Mid, Hi res
+    - Upon successful payment, page reloads and Album is returned with following database
+    - {
+        Album ID
+        url expiration
+        Pictures [{
+            S3 url
+            isPaid
+            resolution
+        }]
+    }
+    - User needs access to read folder. What about AWS cognito and cognitor identity pool with AWS STS?
 
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

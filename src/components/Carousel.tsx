@@ -1,9 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
-import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { Typography, Box } from '@mui/material';
-import { RootState } from '../redux/rootReducer';
 
 const BestPicturesCarousel: React.FC = () => {
     // const bestPictures = useSelector((state: RootState) => state.photos.bestPictures);

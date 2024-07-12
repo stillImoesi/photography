@@ -7,6 +7,7 @@ import { ENDPOINT } from "src/utils/config";
 import { getAlbum } from "src/utils/apis";
 import WhatsAppErrorMessage from "src/components/WhatsAppError";
 import { addDays } from "src/utils";
+import { Box, Link, Typography } from "@mui/material";
 
 const PATH = "selection";
 
@@ -24,24 +25,10 @@ export default async function Page({
 
   let unSignedUrls: string[] = [];
 
-  if (!albumTitle) {
-    return (
-      <WhatsAppErrorMessage
-        error="No album is provided. Contact Admin below"
-        message="Please can you give me the link to the album"
-      />
-    );
-  }
-
   let albumResponse: AlbumResponse | undefined;
 
   if (accessToken && idToken) {
-    albumResponse = await getAlbum(
-      accessToken,
-      idToken,
-      albumTitle,
-      PATH
-    );
+    albumResponse = await getAlbum(accessToken, idToken, albumTitle, PATH);
 
     if (albumResponse?.statusCode === 404) {
       return (
@@ -60,25 +47,59 @@ export default async function Page({
       Object.values(albumResponse.body?.albumProps)) ||
     [];
 
+  if (!albumTitle) {
+    return (
+      <>
+        <WhatsAppErrorMessage
+          error="No album is selected. Select an ablum or contact admin."
+          message="Select an album below or contact admin for help."
+        />
+        <Box sx={{ textAlign: "center", marginTop: "20px" }}>
+          <Typography variant="h4">Select an album to continue</Typography>
+          {albums.map((album) => (
+            <Link
+              key={album.title}
+              href={`/${PATH}?album=${album.title}`}
+              underline="hover"
+              color="primary"
+              variant="button"
+            >
+              <Typography variant="h6">
+                {album.title?.replaceAll("_", " ")}
+              </Typography>
+            </Link>
+          ))}
+        </Box>
+      </>
+    );
+  }
+
+  const selectedAlbum = albums.find((album) => album.title === albumTitle);
+
   return (
     <>
       {/* check for hash key in url */}
       <RedirectToQuery target={PATH} />
-      {albums.map((album) => (
-        <div key={album.title}>
+      {selectedAlbum === undefined ? (
+        <WhatsAppErrorMessage
+          error="Selected album not found. Contact admin for help"
+          message="Select an album below or contact admin for help."
+        />
+      ) : (
+        <div>
           <ImageSelectionList
-            albumTitle={album.title}
-            maxSelectedPics={album.max_allowed_pictures}
+            albumTitle={selectedAlbum.title}
+            maxSelectedPics={selectedAlbum.max_allowed_pictures}
             accessToken={accessToken || ""}
             idToken={idToken || ""}
             endpoint={ENDPOINT}
-            previouslySelected={album.selected_pictures}
+            previouslySelected={selectedAlbum.selected_pictures}
             unSignedUrls={unSignedUrls}
-            status={album.album_status}
-            albumExpiry={addDays(album.created_at || "")}
+            status={selectedAlbum.album_status}
+            albumExpiry={addDays(selectedAlbum.created_at || "")}
           />
         </div>
-      ))}
+      )}
     </>
   );
 }

@@ -2,14 +2,14 @@ import { redirect } from "next/navigation";
 import { ENDPOINT } from "./config";
 import { Image, ImageUrlResponse } from "./type";
 
-export const getAlbum = async (accessToken, idToken, albumTitle, referrer) => {
+export const getAlbum = async (accessToken, idToken, albumName, referrer) => {
   const res = await fetch(`${ENDPOINT}/selection`, {
     next: { revalidate: 3600 },
     headers: {
       authorization: accessToken,
       "x-id-token": idToken,
       state: referrer === "final" ? "final" : "preview",
-      albumName: albumTitle,
+      ...(albumName ? { albumName } : {}),
     },
   });
 
@@ -21,7 +21,8 @@ export const getAlbum = async (accessToken, idToken, albumTitle, referrer) => {
     }
   }
 
-  return res.json();
+  const result = await res.json();
+  return result;
 };
 
 export const getSignedUrls = async (
@@ -47,9 +48,9 @@ export const getSignedUrls = async (
 
   if (res.status === 401) {
     if (typeof window !== "undefined") {
-      window.open(`/login?redirect=/selection`, '_self');
+      window.open(`/login?redirect=/selection`, "_self");
     } else {
-      redirect(`/login?redirect=/${referrer || 'selection'}`);
+      redirect(`/login?redirect=/${referrer || "selection"}`);
     }
   }
 
@@ -57,4 +58,3 @@ export const getSignedUrls = async (
 
   return imageUrlResponse?.body?.urls;
 };
-

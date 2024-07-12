@@ -16,6 +16,7 @@ const InspirationGenerator: React.FC = () => {
 
   return (
     <Box
+      id="contact"
       component="section"
       sx={{
         backgroundColor: "black",
