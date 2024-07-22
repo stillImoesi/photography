@@ -12,7 +12,6 @@ import {
 import normal from "../../assets/resolutionGuide/normal.webp";
 import high from "../../assets/resolutionGuide/high.webp";
 import max from "../../assets/resolutionGuide/max.webp";
-import DownloadIcon from "@mui/icons-material/DownloadOutlined";
 import PrintIcon from "@mui/icons-material/Print";
 
 interface GuideProps {

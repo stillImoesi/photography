@@ -1,0 +1,7 @@
+.my-input .MuiInputBase-root {
+    color: #fff;
+
+    input {
+        border-color: #fff;
+    }
+}

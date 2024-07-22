@@ -8,7 +8,6 @@ import IconButton from "@mui/material/IconButton";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarFilledIcon from "@mui/icons-material/Star";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import { Suspense } from "react";
 import {
   AppBar,
   Backdrop,
@@ -132,7 +131,11 @@ const RenderProgressStatus = React.memo(
     if (status) {
       return (
         <Toolbar sx={{ justifyContent: "center" }}>
-            {status === "progress" ? progressMessage :status === "completed" ? completedMessage : null}
+          {status === "progress"
+            ? progressMessage
+            : status === "completed"
+            ? completedMessage
+            : null}
         </Toolbar>
       );
     }
@@ -152,9 +155,8 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
     albumExpiry,
   } = props;
 
-  const [alreadySelectedPictures, updateAlreadySelectedPictures] = React.useState<string[]>([
-    ...previouslySelected
-  ]);
+  const [alreadySelectedPictures, updateAlreadySelectedPictures] =
+    React.useState<string[]>([...previouslySelected]);
 
   const [selectedPics, updateSelectedPics] = React.useState<string[]>([
     ...previouslySelected,
@@ -228,7 +230,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
           `https://wa.me/+358444919193?text=I have made my selection. Thanks`
         );
       }
-      updateAlreadySelectedPictures(selectedPics)
+      updateAlreadySelectedPictures(selectedPics);
     } catch (e) {
       throw Error(e.message);
     }
@@ -239,7 +241,8 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const hideSelectionButton = React.useCallback(
     () =>
       Boolean(
-        JSON.stringify(selectedPics) === JSON.stringify(alreadySelectedPictures) ||
+        JSON.stringify(selectedPics) ===
+          JSON.stringify(alreadySelectedPictures) ||
           selectedPics.length < maxSelectedPics
       ),
     [selectedPics, alreadySelectedPictures]
@@ -341,111 +344,109 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
       </AppBar>
       {/* Image selection */}
       <Box sx={{ marginTop: "64px" }}>
-        <Suspense fallback={<h1>Loading...</h1>}>
-          <RenderProgressStatus status={props.status} albumTitle={albumTitle} />
-          <ImageList
-            cols={imgCols}
-            sx={{
-              width: "100vw",
-              transform: "translateZ(0)",
-            }}
-            gap={18}
-            variant="masonry"
-          >
-            {imageList?.map((item, imageIndex) => {
-              const cols = 1;
-              const rows = 1;
-              const isSelectedIndex = getIndex(selectedPics, item.title);
-              const isSelected = isSelectedIndex > -1;
+        <RenderProgressStatus status={props.status} albumTitle={albumTitle} />
+        <ImageList
+          cols={imgCols}
+          sx={{
+            width: "100vw",
+            transform: "translateZ(0)",
+          }}
+          gap={18}
+          variant="masonry"
+        >
+          {imageList?.map((item, imageIndex) => {
+            const cols = 1;
+            const rows = 1;
+            const isSelectedIndex = getIndex(selectedPics, item.title);
+            const isSelected = isSelectedIndex > -1;
 
-              return (
-                <ImageListItem key={item.url} cols={cols} rows={rows}>
-                  <img
-                    src={item.url}
-                    alt={item.url}
-                    onClick={() => handleOnSelectedImage(imageIndex)}
-                    loading="lazy"
-                    style={{
-                      width: "100%",
-                      objectFit: "contain",
-                      height: "100%",
-                    }}
-                  />
-                  <ImageListItemBar
-                    sx={{
-                      background: `linear-gradient(to bottom, rgb(0 0 0 / 44%) 0%, rgb(0 0 0 / 21%) 70%, rgb(0 0 0 / 7%) 100%)`,
-                    }}
-                    title={item.title}
-                    position="top"
-                    actionIcon={
-                      <RenderIconStar
-                        item={item}
-                        isSelected={isSelected}
-                        selectedPics={[...selectedPics]}
-                        previouslySelected={[...previouslySelected]}
-                        updateSelectedPics={updateSelectedPics}
-                        isSelectedIndex={isSelectedIndex}
-                        disabledEditing={disabledEditing}
-                      />
-                    }
-                    actionPosition="left"
-                  />
-                </ImageListItem>
-              );
-            })}
-          </ImageList>
-          {/* Image preview Modal */}
-          {openImagePreview && (
-            <Box>
-              <Box
-                sx={{
-                  position: "fixed",
-                  zIndex: 2002,
-                  bottom: 0,
-                  textAlign: "center",
-                  width: "100%",
-                  background: "#0000003d",
-                }}
-              >
-                <RenderIconStar
-                  item={previewSelectionItem}
-                  isSelected={previewSelectionItemIndex > -1}
-                  selectedPics={[...selectedPics]}
-                  previouslySelected={[...previouslySelected]}
-                  updateSelectedPics={updateSelectedPics}
-                  isSelectedIndex={previewSelectionItemIndex}
-                  disabledEditing={disabledEditing}
+            return (
+              <ImageListItem key={item.url} cols={cols} rows={rows}>
+                <img
+                  src={item.url}
+                  alt={item.url}
+                  onClick={() => handleOnSelectedImage(imageIndex)}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    objectFit: "contain",
+                    height: "100%",
+                  }}
                 />
-              </Box>
-
-              <ImgsViewer
-                isOpen={openImagePreview}
-                imgs={imageList.map((i) => ({
-                  src: i.url,
-                  srcSet: i.url,
-                  caption: i.title,
-                }))}
-                currImg={selectedImage}
-                onClose={() => handleOnSelectedImage(-1)}
-                preloadNextImg
-                showCloseBtn
-                backdropCloseable
-                onClickNext={() => {
-                  handleOnSelectedImage(
-                    imageList.length - 1 === selectedImage
-                      ? selectedImage
-                      : selectedImage + 1
-                  );
-                }}
-                onClickPrev={() =>
-                  handleOnSelectedImage(
-                    selectedImage === 0 ? selectedImage : selectedImage - 1
-                  )
-                }
+                <ImageListItemBar
+                  sx={{
+                    background: `linear-gradient(to bottom, rgb(0 0 0 / 44%) 0%, rgb(0 0 0 / 21%) 70%, rgb(0 0 0 / 7%) 100%)`,
+                  }}
+                  title={item.title}
+                  position="top"
+                  actionIcon={
+                    <RenderIconStar
+                      item={item}
+                      isSelected={isSelected}
+                      selectedPics={[...selectedPics]}
+                      previouslySelected={[...previouslySelected]}
+                      updateSelectedPics={updateSelectedPics}
+                      isSelectedIndex={isSelectedIndex}
+                      disabledEditing={disabledEditing}
+                    />
+                  }
+                  actionPosition="left"
+                />
+              </ImageListItem>
+            );
+          })}
+        </ImageList>
+        {/* Image preview Modal */}
+        {openImagePreview && (
+          <Box>
+            <Box
+              sx={{
+                position: "fixed",
+                zIndex: 2002,
+                bottom: 0,
+                textAlign: "center",
+                width: "100%",
+                background: "#0000003d",
+              }}
+            >
+              <RenderIconStar
+                item={previewSelectionItem}
+                isSelected={previewSelectionItemIndex > -1}
+                selectedPics={[...selectedPics]}
+                previouslySelected={[...previouslySelected]}
+                updateSelectedPics={updateSelectedPics}
+                isSelectedIndex={previewSelectionItemIndex}
+                disabledEditing={disabledEditing}
               />
             </Box>
-          )}
-        </Suspense>
+
+            <ImgsViewer
+              isOpen={openImagePreview}
+              imgs={imageList.map((i) => ({
+                src: i.url,
+                srcSet: i.url,
+                caption: i.title,
+              }))}
+              currImg={selectedImage}
+              onClose={() => handleOnSelectedImage(-1)}
+              preloadNextImg
+              showCloseBtn
+              backdropCloseable
+              onClickNext={() => {
+                handleOnSelectedImage(
+                  imageList.length - 1 === selectedImage
+                    ? selectedImage
+                    : selectedImage + 1
+                );
+              }}
+              onClickPrev={() =>
+                handleOnSelectedImage(
+                  selectedImage === 0 ? selectedImage : selectedImage - 1
+                )
+              }
+            />
+          </Box>
+        )}
       </Box>
       <Pagination
         count={Math.ceil(unSignedUrls.length / 20)}

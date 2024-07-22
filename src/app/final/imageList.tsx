@@ -5,7 +5,7 @@ import ImageList from "@mui/material/ImageList";
 import * as React from "react";
 import ImgsViewer from "react-images-viewer";
 import DownloadIcon from "@mui/icons-material/DownloadOutlined";
-import ResolutionGuide from "./resolutionGuide";
+import PrintGuide from "./printGuide";
 
 interface ImageListProps {
   imageList: {
@@ -60,7 +60,7 @@ const ImageListComponent = ({ imageList }: ImageListProps) => {
         })}
       </ImageList>
 
-      <ResolutionGuide
+      <PrintGuide
         open={guideOpen}
         onClose={() => handleGuideOpen(false)}
         image={imageList[selectedImage]}

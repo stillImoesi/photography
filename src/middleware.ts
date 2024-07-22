@@ -20,14 +20,6 @@ export function middleware(request: NextRequest) {
   requestHeaders.set("x-origin", nextUrl.origin);
   requestHeaders.set('x-pathname', nextUrl.pathname);
 
-
-  // if (nextUrl.pathname === '/selection') {
-  //   if (!request.cookies.get('access_token') || !request.cookies.get('id_token')) {
-  //     // return NextResponse.redirect(new URL(`/login?redirect=${nextUrl.pathname}`, nextUrl.origin))
-  //     return NextResponse.redirect(generateLoginUrl( nextUrl.origin, '/selection'))
-  //   }
-  // }
-
   const response = NextResponse.next({
     request: {
       // New request headers
@@ -36,7 +28,7 @@ export function middleware(request: NextRequest) {
   });
 
   // clear cookies on login
-  if (nextUrl.pathname === '/login') {
+  if (nextUrl.pathname === '/login' || nextUrl.pathname === '/logout' || nextUrl.pathname === '/') {
     request.cookies.delete('access_token')
     request.cookies.delete('id_token')
 
