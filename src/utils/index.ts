@@ -1,17 +1,11 @@
 import { parse } from "parse-multipart-data";
 
 export const generateLoginUrl = (origin: string, path: string) => {
-  const cognitorBase =
-    "https://sp-photos.auth.eu-central-1.amazoncognito.com/oauth2/authorize?client_id=11lc7bascotnru1bacuo0346pu&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+profile&redirect_uri=";
-
-  return `${cognitorBase}${origin}${path}`;
+  return `${process.env.COGNITOR_LOGIN_URL}${origin}${path}`;
 };
 
 export const generateLogoutUrl = (origin: string, path: string) => {
-  const cognitorBase =
-    "https://sp-photos.auth.eu-central-1.amazoncognito.com/logout?client_id=11lc7bascotnru1bacuo0346pu&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+profile&redirect_uri=";
-
-  return `${cognitorBase}${origin}${path}`;
+  return `${process.env.COGNITOR_LOGOUT_URL}${origin}${path}`;
 };
 
 export function getWindowCookie(name) {
@@ -95,4 +89,4 @@ export const returnAwsCredentials = () => {
     accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
     secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
   };
-}
+};
