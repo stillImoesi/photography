@@ -8,7 +8,7 @@ import {
 } from "@aws-sdk/client-dynamodb";
 import { returnAwsCredentials } from "src/utils";
 
-const region = process.env.AWS_REGION || "eu-central-1";
+const region = process.env.AWS_REGION || "eu-east-2";
 const databaseName = process.env.DATABASE_NAME || "test_table";
 
 const dynamoDbClient = new DynamoDBClient({

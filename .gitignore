@@ -26,5 +26,6 @@ yarn-error.log*
 .next
 next-env.d.ts
 dist
+.env
 
 personal_token

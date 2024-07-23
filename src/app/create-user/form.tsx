@@ -70,7 +70,9 @@ const createUserForm = () => {
 
     const { message } = await response.json();
     if (message === "Success") {
-      //   alert("Success");
+        alert("Success");
+    } else {
+      alert("Failed to create user");
     }
   };
 

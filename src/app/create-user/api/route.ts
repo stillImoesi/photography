@@ -3,13 +3,8 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { createOrUpdateDbEntry, createNewCognitorUser } from "src/app/actions";
 import { parseForm, readStreamToEnd, returnAwsCredentials } from "src/utils";
 
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js's built-in body parser
-  },
-};
 
-const region = process.env.AWS_REGION || "eu-central-1";
+const region = process.env.AWS_REGION || "us-east-1";
 const s3Bucket = process.env.S3_BUCKET || "test-bucket";
 const s3Client = new S3Client({ region, credentials: returnAwsCredentials() });
 

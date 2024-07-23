@@ -9,7 +9,7 @@ import {
 } from "@aws-sdk/client-cognito-identity-provider";
 import { generateRandomPassword, returnAwsCredentials } from "src/utils";
 
-const region = process.env.AWS_REGION || "eu-central-1";
+const region = process.env.AWS_REGION || "us-east-2";
 const userPoolId = process.env.COGNITO_USER_POOL_ID || "test_user_pool_id";
 
 const cognitoClient = new CognitoIdentityProviderClient({
