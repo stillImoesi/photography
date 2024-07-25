@@ -1,15 +1,12 @@
 import React from "react";
 import Carousel from "./Carousel";
+import { LocalImages } from "src/utils/type";
 
 interface Props {
-    images:  {
-        url: string;
-        title: string;
-      }[]
+  images: LocalImages[];
 }
 
-const Location = ({ images }: Props) => {
-  return images.length ? <Carousel title="" photos={images} /> : null;
-};
+const Location = ({ images }: Props) =>
+  images.length ? <Carousel title="" photos={images} /> : null;
 
 export default Location;

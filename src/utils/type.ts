@@ -37,3 +37,11 @@ export interface ImageUrlResponse {
     }[];
   };
 }
+
+export interface LocalImages {
+  path: {
+    src: string;
+    width: number;
+  };
+  title: string;
+}

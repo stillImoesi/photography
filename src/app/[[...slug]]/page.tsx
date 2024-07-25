@@ -7,16 +7,22 @@ export function generateStaticParams() {
   return [{ slug: [""] }];
 }
 
-const Page = async () => {
+const getImagesSrc = async () => {
   const imageDirectory = path.join(process.cwd(), "src", "assets", "studio");
   const filenames = await fs.readdir(imageDirectory, {
     withFileTypes: true,
     encoding: null,
   });
-  const images = filenames.map(({ name }, index) => ({
-    url: `/assets/studio/${name}`,
-    title: `pix${index + 1}`,
-  }));
+  return Promise.all(
+    filenames.map(async ({ name }, index) => ({
+      path: (await import(`../../assets/studio/${name}`)).default,
+      title: `pix${index + 1}`,
+    }))
+  );
+};
+
+const Page = async () => {
+  const images = await getImagesSrc();
 
   return <ClientOnly studio={images} location={images} />;
 };

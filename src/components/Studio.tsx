@@ -1,12 +1,8 @@
 import React from 'react';
 import Gallery from './Carousel';
-
-
+import { LocalImages } from 'src/utils/type';
 interface Props {
-    images:  {
-        url: string;
-        title: string;
-      }[]
+    images:  LocalImages[];
 }
 
 const Studio = ({ images }: Props) => {

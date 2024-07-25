@@ -4,8 +4,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Typography, Box } from "@mui/material";
 import "./styles.css";
 import Image from 'next/image'
+import { LocalImages } from "src/utils/type";
 
-const Gallery: React.FC<{ title: string; photos: any[] }> = ({
+const Gallery: React.FC<{ title: string; photos: LocalImages[] }> = ({
   title,
   photos,
 }) => {
@@ -40,7 +41,7 @@ const Gallery: React.FC<{ title: string; photos: any[] }> = ({
           {photos.map((photo, index) => (
             <div key={index}>
               <Image
-                src={photo.url}
+                src={photo.path?.src}
                 alt={photo.title}
                 width={100}
                 height={150}
@@ -57,7 +58,7 @@ const Gallery: React.FC<{ title: string; photos: any[] }> = ({
           {photos.map((photo, index) => (
             <div key={index}>
               <Image
-                src={photo.url}
+                src={photo.path?.src}
                 alt={photo.title}
                 width={200}
                 height={300}
