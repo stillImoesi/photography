@@ -62,6 +62,10 @@ export async function readStreamToEnd(stream) {
 export const parseForm = (body: Buffer, contentType: string) => {
   const boundary = contentType.split("boundary=")[1];
 
+  if (!boundary) {
+    throw new Error("Missing boundary");
+  }
+
   const fields = {} as any;
   const files = [] as any;
 
@@ -85,6 +89,9 @@ export const parseForm = (body: Buffer, contentType: string) => {
 };
 
 export const returnAwsCredentials = () => {
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    throw new Error("Missing AWS credentials");
+  }
   return {
     accessKeyId: String(process.env.AWS_ACCESS_KEY_ID),
     secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
