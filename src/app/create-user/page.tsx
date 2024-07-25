@@ -1,3 +1,4 @@
+import React from "react";
 import { cookies } from "next/headers";
 import CreateUserForm from "./form";
 import RedirectToQuery from "src/components/redirect";

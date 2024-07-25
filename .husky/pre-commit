@@ -1,3 +1,2 @@
 yarn test
-
-exit 1
+yarn lint

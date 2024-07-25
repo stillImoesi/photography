@@ -50,7 +50,8 @@
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint": "next lint"
   },
   "eslintConfig": {
     "extends": [
@@ -71,10 +72,15 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.7.0",
     "dotenv": "^16.4.5",
-    "eslint": "^9.6.0",
+    "eslint": "8.x",
+    "eslint-config-next": "^14.2.5",
+    "eslint-plugin-react": "^7.35.0",
+    "globals": "^15.8.0",
     "husky": "^9.1.2",
     "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "typescript-eslint": "^7.17.0"
   }
 }
