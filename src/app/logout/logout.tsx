@@ -24,4 +24,6 @@ const Logout = React.memo(({ redirectUrl }: {
     </Box>
 ))
 
-export default Logout
+Logout.displayName = "Logout";
+
+export default Logout;

@@ -35,7 +35,7 @@ const MODEL_MESSAGE_SELECTION_ADDING_TO_PREVIOUSLY_SELECTED =
   "You are adding more pictures to the onces you have previously selected :). Photographer will be notified. Do you want to lock in these selection for additional fee of 35€ / photo?";
 
 const modelStyle = {
-  position: "absolute" as "absolute",
+  position: "absolute",
   color: "#000",
   top: "50%",
   left: "50%",
@@ -64,27 +64,27 @@ const getIndex = (selectedPics, target) => {
   return selectedPics.findIndex((x) => x === target);
 };
 
-const RenderIconStar = React.memo(
-  ({
-    item,
-    isSelected,
-    selectedPics,
-    previouslySelected,
-    updateSelectedPics,
-    isSelectedIndex,
-    disabledEditing,
-  }: {
-    item: {
-      url: string;
-      title: string;
-    };
-    isSelected: boolean;
-    selectedPics: string[];
-    previouslySelected: string[];
-    updateSelectedPics: (pics: string[]) => void;
-    isSelectedIndex: number;
-    disabledEditing: boolean;
-  }) => (
+const RenderIconStar = React.memo(function RenderIconStar({
+  item,
+  isSelected,
+  selectedPics,
+  previouslySelected,
+  updateSelectedPics,
+  isSelectedIndex,
+  disabledEditing,
+}: {
+  item: {
+    url: string;
+    title: string;
+  };
+  isSelected: boolean;
+  selectedPics: string[];
+  previouslySelected: string[];
+  updateSelectedPics: (pics: string[]) => void;
+  isSelectedIndex: number;
+  disabledEditing: boolean;
+}) {
+  return (
     <IconButton
       sx={{ color: "white", fill: "red" }}
       color="success"
@@ -102,46 +102,50 @@ const RenderIconStar = React.memo(
     >
       {isSelected ? <StarFilledIcon /> : <StarBorderIcon />}
     </IconButton>
-  )
-);
+  );
+});
 
-const RenderProgressStatus = React.memo(
-  ({ status, albumTitle }: { status?: string; albumTitle: string }) => {
-    const typographyProps = {
-      sx: {
-        typography: { xs: "body" },
-        textDecoration: "underline",
-        textAlign: "center",
-      },
-    };
-    const progressMessage = (
-      <Typography {...typographyProps}>
-        Photographer is working on your pictures. You will be notified when they
-        are ready
-      </Typography>
+const RenderProgressStatus = React.memo(function RenderIconStar({
+  status,
+  albumTitle,
+}: {
+  status?: string;
+  albumTitle: string;
+}) {
+  const typographyProps = {
+    sx: {
+      typography: { xs: "body" },
+      textDecoration: "underline",
+      textAlign: "center",
+    },
+  };
+  const progressMessage = (
+    <Typography {...typographyProps}>
+      Photographer is working on your pictures. You will be notified when they
+      are ready
+    </Typography>
+  );
+
+  const completedMessage = (
+    <Typography {...typographyProps}>
+      Picture are complete and ready for download. Click{" "}
+      <Link href={`/final?album=${albumTitle}`}>here</Link>
+    </Typography>
+  );
+
+  if (status) {
+    return (
+      <Toolbar sx={{ justifyContent: "center" }}>
+        {status === "progress"
+          ? progressMessage
+          : status === "completed"
+          ? completedMessage
+          : null}
+      </Toolbar>
     );
-
-    const completedMessage = (
-      <Typography {...typographyProps}>
-        Picture are complete and ready for download. Click{" "}
-        <Link href={`/final?album=${albumTitle}`}>here</Link>
-      </Typography>
-    );
-
-    if (status) {
-      return (
-        <Toolbar sx={{ justifyContent: "center" }}>
-          {status === "progress"
-            ? progressMessage
-            : status === "completed"
-            ? completedMessage
-            : null}
-        </Toolbar>
-      );
-    }
-    return null;
   }
-);
+  return null;
+});
 
 export default function ImageSelectionList(props: ImageSelectionProps) {
   const {
@@ -178,7 +182,7 @@ export default function ImageSelectionList(props: ImageSelectionProps) {
   const [currPage, handleCurrPage] = React.useState<number>(1);
   const [imageList, updateImageList] = React.useState<Image[]>([]);
 
-  let prevCurrPage = React.useRef(0);
+  const prevCurrPage = React.useRef(0);
 
   React.useEffect(() => {
     if (currPage !== prevCurrPage.current) {

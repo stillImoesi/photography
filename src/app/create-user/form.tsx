@@ -16,7 +16,7 @@ import * as React from "react";
 import "./styles.css";
 import dayjs from "dayjs";
 
-const createUserForm = () => {
+const CreateUserForm = () => {
   const keys = [
     { key: "title", type: "text" },
     { key: "email", type: "email" },
@@ -32,13 +32,6 @@ const createUserForm = () => {
     changePassword: false,
     files: [],
   });
-
-  const [fileBuffers, setFileBuffers] = React.useState<
-    { name: string; type: string; buffer: ArrayBuffer }[]
-  >([]);
-
-  // check username from environment variables
-  const username = process.env.NEXT_PUBLIC_USERNAME || "Unknown User";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -194,4 +187,4 @@ const createUserForm = () => {
   );
 };
 
-export default createUserForm;
+export default CreateUserForm;
