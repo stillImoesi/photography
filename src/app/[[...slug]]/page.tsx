@@ -1,5 +1,4 @@
 import "../../index.css";
-import StoreProvider from "../StoreProvider";
 import { ClientOnly } from "./client";
 import path from "path";
 import fs from "fs/promises";
@@ -9,7 +8,7 @@ export function generateStaticParams() {
 }
 
 const Page = async () => {
-  const imageDirectory = path.join(process.cwd(), "public", "assets", "studio");
+  const imageDirectory = path.join(process.cwd(), "src", "assets", "studio");
   const filenames = await fs.readdir(imageDirectory, {
     withFileTypes: true,
     encoding: null,
@@ -19,11 +18,7 @@ const Page = async () => {
     title: `pix${index + 1}`,
   }));
 
-  return (
-    <StoreProvider>
-      <ClientOnly studio={images} location={images} />
-    </StoreProvider>
-  );
+  return <ClientOnly studio={images} location={images} />;
 };
 
 export default Page;

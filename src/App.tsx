@@ -1,7 +1,7 @@
 import React from "react";
 import Contact from "./components/Contact";
-import LocationPhotos from "./components/Location";
-import Studio from "./components/Studio";
+import Gallery from "./components/Gallery";
+import Services from "./components/Services";
 import BackgroundCarousel from "./components/BackgroundCarousel";
 import MenuIcon from "@mui/icons-material/Menu";
 import Drawer from "@mui/material/Drawer";
@@ -37,10 +37,10 @@ const NavLinks = [
   //   title: "About",
   //   url: "#About",
   // },
-  // {
-  //   title: "Prices",
-  //   url: "#Prices",
-  // },
+  {
+    title: "Services",
+    url: "#services",
+  },
   {
     title: "Contact",
     url: "#contact",
@@ -182,11 +182,12 @@ const App: React.FC = (props: StaticImages) => {
       <Container>
         <Box marginTop={"20px"}>
           <Typography variant="h4" component="h2" gutterBottom>
-            Services
+            Gallery
           </Typography>
         </Box>
-        <LocationPhotos images={props.location} />
-        <Studio images={props.studio} />
+        <Gallery images={props.location} />
+        {/* <Studio images={props.studio} /> */}
+        <Services />
         <Contact />
       </Container>
 
