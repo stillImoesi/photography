@@ -49,9 +49,9 @@ export default async function createOrUpdateDbEntry(formData: DBArgs) {
           title: { S: formData.title },
         },
         UpdateExpression:
-          "set max_selected_pics = :max_selected_pics, updated_at = :updated_at",
+          "set max_allowed_pictures = :max_allowed_pictures, updated_at = :updated_at",
         ExpressionAttributeValues: {
-          ":max_selected_pics": { N: formData.maxAllowedPictures.toString() },
+          ":max_allowed_pictures": { N: formData.maxAllowedPictures.toString() },
           ":updated_at": { S: new Date().toISOString() },
         },
       };
@@ -64,10 +64,11 @@ export default async function createOrUpdateDbEntry(formData: DBArgs) {
         Item: {
           email: { S: formData.email },
           title: { S: formData.title },
-          max_selected_pics: { N: formData.maxAllowedPictures.toString() },
+          max_allowed_pictures: { N: formData.maxAllowedPictures.toString() },
           created_at: { S: formData.createdAt || new Date().toISOString() },
           updated_at: { S: new Date().toISOString() },
           selected_pictures: { L: [] },
+          album_status: { S: "progress" },
         },
       };
       await dynamoDbClient.send(new PutItemCommand(albumParams));
