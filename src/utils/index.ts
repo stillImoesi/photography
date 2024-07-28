@@ -1,7 +1,6 @@
 import { parse } from "parse-multipart-data";
 
 export const generateLoginUrl = (origin: string, path: string, cognitoUrl?: string) => {
-  console.log({cognitoUrl})
   return `${cognitoUrl || process.env.COGNITO_LOGIN_URL}${origin}${path}`;
 };
 
