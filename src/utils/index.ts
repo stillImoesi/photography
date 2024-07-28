@@ -1,11 +1,11 @@
 import { parse } from "parse-multipart-data";
 
-export const generateLoginUrl = (origin: string, path: string) => {
-  return `${process.env.COGNITOR_LOGIN_URL}${origin}${path}`;
+export const generateLoginUrl = (origin: string, path: string, cognitoUrl?: string) => {
+  return `${cognitoUrl || process.env.COGNITO_LOGIN_URL}${origin}${path}`;
 };
 
-export const generateLogoutUrl = (origin: string, path: string) => {
-  return `${process.env.COGNITOR_LOGOUT_URL}${origin}${path}`;
+export const generateLogoutUrl = (origin: string, path: string, cognitoUrl?: string) => {
+  return `${cognitoUrl || process.env.COGNITO_LOGOUT_URL}${origin}${path}`;
 };
 
 export function getWindowCookie(name) {

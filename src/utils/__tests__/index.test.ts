@@ -14,8 +14,8 @@ import {
 } from "..";
 
 // Mock the environment variables
-process.env.COGNITOR_LOGIN_URL = "https://login.example.com/";
-process.env.COGNITOR_LOGOUT_URL = "https://logout.example.com/";
+process.env.COGNITO_LOGIN_URL = "https://login.example.com/";
+process.env.COGNITO_LOGOUT_URL = "https://logout.example.com/";
 process.env.AWS_ACCESS_KEY_ID = "testAccessKeyId";
 process.env.AWS_SECRET_ACCESS_KEY = "testSecretAccessKey";
 
@@ -114,7 +114,7 @@ describe("Utility Functions", () => {
     it("should read the stream to the end", async () => {
       const stream = {
         getReader: () => {
-          let chunks = [new Uint8Array([1, 2, 3])];
+          const chunks = [new Uint8Array([1, 2, 3])];
           return {
             async read() {
               return chunks.length > 0

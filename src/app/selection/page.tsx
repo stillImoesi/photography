@@ -1,3 +1,4 @@
+import * as React from 'react';
 import Layout from "../layout";
 import RedirectToQuery from "../../components/redirect";
 import ImageSelectionList from "./imageSelection";
@@ -79,7 +80,7 @@ export default async function Page({
   return (
     <>
       {/* check for hash key in url */}
-      <RedirectToQuery target={PATH} />
+      <RedirectToQuery target={PATH} cognitorLoginUrl={process.env.COGNITO_LOGIN_URL} />
       {selectedAlbum === undefined ? (
         <WhatsAppErrorMessage
           error="Selected album not found. Contact admin for help"

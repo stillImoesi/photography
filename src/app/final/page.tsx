@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import Layout from "../layout";
 import { ENDPOINT } from "src/utils/config";
@@ -64,7 +65,7 @@ export default async function Page({
 
   return (
     <>
-      <RedirectToQuery target="final" />
+      <RedirectToQuery target="final" cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}  />
       <Box>
         {albumProps.map((album) => (
           <div key={album.title}>
