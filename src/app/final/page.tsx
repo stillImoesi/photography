@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import Layout from "../layout";
 import { ENDPOINT } from "src/utils/config";
@@ -8,6 +8,7 @@ import { AlbumResponse } from "src/utils/type";
 import { getAlbum, getSignedUrls } from "src/utils/apis";
 import ImageListComponent from "./imageList";
 import RedirectToQuery from "../../components/redirect";
+import { calculateDaysRemaining } from "src/utils";
 
 export default async function Page({
   searchParams,
@@ -26,10 +27,17 @@ export default async function Page({
 
   if (!albumTitle) {
     return (
-      <WhatsAppErrorMessage
-        error="No album is provided. Contact Admin below"
-        message="Please can you give me the link to the album"
-      />
+      <>
+        <RedirectToQuery
+          target="final"
+          cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}
+        />
+
+        <WhatsAppErrorMessage
+          error="No album is provided. Contact Admin below"
+          message="Please can you give me the link to the album"
+        />
+      </>
     );
   }
 
@@ -65,7 +73,10 @@ export default async function Page({
 
   return (
     <>
-      <RedirectToQuery target="final" cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}  />
+      <RedirectToQuery
+        target="final"
+        cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}
+      />
       <Box>
         {albumProps.map((album) => (
           <div key={album.title}>
@@ -74,9 +85,23 @@ export default async function Page({
                 position="fixed"
                 sx={{ display: { background: "#000000bd" } }}
               >
-                <Toolbar sx={{ justifyContent: "space-between" }}>
+                <Toolbar
+                  sx={{
+                    justifyContent: { sm: "space-between", xs: "initial" },
+                    flexDirection: { sm: "row", xs: "column" },
+                  }}
+                >
                   <Typography sx={{ typography: { sm: "h4", xs: "h6" } }}>
                     {`Album: ${albumTitle?.replaceAll("_", " ")}`}
+                  </Typography>
+                  <Typography
+                    sx={{ typography: { sm: "h8", xs: "h8" } }}
+                    variant="body1"
+                  >
+                    {`${calculateDaysRemaining(
+                      album.created_at,
+                      90
+                    )} day(s) remaining`}
                   </Typography>
                 </Toolbar>
               </AppBar>

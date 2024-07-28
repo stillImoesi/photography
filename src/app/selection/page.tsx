@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import Layout from "../layout";
 import RedirectToQuery from "../../components/redirect";
 import ImageSelectionList from "./imageSelection";
@@ -51,18 +51,24 @@ export default async function Page({
   if (!albumTitle) {
     return (
       <>
+        {/* check for hash key in url */}
+        <RedirectToQuery
+          target={PATH}
+          cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}
+        />
         <WhatsAppErrorMessage
           error="No album is selected. Select an ablum or contact admin."
           message="Select an album below or contact admin for help."
         />
         <Box sx={{ textAlign: "center", marginTop: "20px" }}>
           <Typography variant="h4">Select an album to continue</Typography>
+          <Typography variant="h4">🎞</Typography>
           {albums.map((album) => (
             <Link
               key={album.title}
               href={`/${PATH}?album=${album.title}`}
               underline="hover"
-              color="primary"
+              color="secondary"
               variant="button"
             >
               <Typography variant="h6">
@@ -80,7 +86,10 @@ export default async function Page({
   return (
     <>
       {/* check for hash key in url */}
-      <RedirectToQuery target={PATH} cognitorLoginUrl={process.env.COGNITO_LOGIN_URL} />
+      <RedirectToQuery
+        target={PATH}
+        cognitorLoginUrl={process.env.COGNITO_LOGIN_URL}
+      />
       {selectedAlbum === undefined ? (
         <WhatsAppErrorMessage
           error="Selected album not found. Contact admin for help"
