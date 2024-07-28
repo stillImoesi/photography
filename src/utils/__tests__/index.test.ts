@@ -1,4 +1,3 @@
-import { parse } from "parse-multipart-data";
 import { Readable } from "stream";
 import { Buffer } from "buffer";
 import {
@@ -11,6 +10,7 @@ import {
   readStreamToEnd,
   parseForm,
   returnAwsCredentials,
+  calculateDaysRemaining,
 } from "..";
 
 // Mock the environment variables
@@ -183,3 +183,28 @@ describe("Utility Functions", () => {
     });
   });
 });
+
+describe("calculate Days Remaining", () => {
+  test('calculates remaining days correctly for a future date within the allocated period', () => {
+    const now = new Date();
+    const startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
+    expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(60);
+  });
+  
+  test('calculates remaining days correctly for a future date past the allocated period', () => {
+    const now = new Date();
+    const startDate = new Date(now.getTime() - 100 * 24 * 60 * 60 * 1000); // 100 days ago
+    expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(0);
+  });
+  
+  test('calculates remaining days correctly for the start date being today', () => {
+    const startDate = new Date();
+    expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(90);
+  });
+  
+  test('calculates remaining days correctly for a date in the past beyond the allocated period', () => {
+    const now = new Date();
+    const startDate = new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000); // 120 days ago
+    expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(0);
+  });
+})

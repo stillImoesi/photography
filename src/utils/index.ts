@@ -28,7 +28,7 @@ export function getPaginatedChunk<T>(array: T[], pageNumber: number): T[] {
 }
 
 export function addDays(date) {
-  let result = new Date(date);
+  const result = new Date(date);
   result.setDate(result.getDate() + 30);
   return result;
 }
@@ -97,3 +97,16 @@ export const returnAwsCredentials = () => {
     secretAccessKey: String(process.env.AWS_SECRET_ACCESS_KEY),
   };
 };
+
+export const calculateDaysRemaining = (startDate: string, daysAllocated: number) => {
+  const MILLISECONDS_IN_A_DAY = 24 * 60 * 60 * 1000;
+  
+  const start = Number(new Date(startDate));
+  const now = Number(new Date());
+  const timeDifference = now - start;
+  const daysElapsed = Math.floor(timeDifference / MILLISECONDS_IN_A_DAY);
+  const daysRemaining = daysAllocated - daysElapsed;
+  
+  // Ensure that the days remaining do not go below 0
+  return Math.max(daysRemaining, 0);
+}
