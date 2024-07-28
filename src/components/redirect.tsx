@@ -24,9 +24,6 @@ const RedirectToQuery = ({ target, cognitorLoginUrl }: Props) => {
         !getWindowCookie("access_token") ||
         !getWindowCookie("id_token")
       ) {
-        console.log({
-          location: generateLoginUrl(location.origin, `/${target}`, cognitorLoginUrl),
-        });
         location.replace(
           generateLoginUrl(location.origin, `/${target}`, cognitorLoginUrl)
         );
