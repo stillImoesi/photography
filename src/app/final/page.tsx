@@ -85,12 +85,23 @@ export default async function Page({
                 position="fixed"
                 sx={{ display: { background: "#000000bd" } }}
               >
-                <Toolbar sx={{ justifyContent: { sm: "space-between", xs: "initial" }, flexDirection: { sm: "row", xs: "column" } }}>
+                <Toolbar
+                  sx={{
+                    justifyContent: { sm: "space-between", xs: "initial" },
+                    flexDirection: { sm: "row", xs: "column" },
+                  }}
+                >
                   <Typography sx={{ typography: { sm: "h4", xs: "h6" } }}>
                     {`Album: ${albumTitle?.replaceAll("_", " ")}`}
                   </Typography>
-                  <Typography sx={{ typography: { sm: "h8", xs: "h8" } }} variant="body1">
-                    {`${calculateDaysRemaining(album.created_at, 90)} day(s) remaining`}
+                  <Typography
+                    sx={{ typography: { sm: "h8", xs: "h8" } }}
+                    variant="body1"
+                  >
+                    {`${calculateDaysRemaining(
+                      album.created_at,
+                      90
+                    )} day(s) remaining`}
                   </Typography>
                 </Toolbar>
               </AppBar>

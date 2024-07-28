@@ -144,25 +144,31 @@ describe("Utility Functions", () => {
     });
   });
 
-  describe('parseForm', () => {
-    const boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW';
+  describe("parseForm", () => {
+    const boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
     const body = Buffer.from(
-      '--' + boundary + '\r\n' +
-      'Content-Disposition: form-data; name="field1"\r\n\r\n' +
-      'value1\r\n' +
-      '--' + boundary + '--'
+      "--" +
+        boundary +
+        "\r\n" +
+        'Content-Disposition: form-data; name="field1"\r\n\r\n' +
+        "value1\r\n" +
+        "--" +
+        boundary +
+        "--"
     );
-  
-    it('should parse form data correctly', () => {
+
+    it("should parse form data correctly", () => {
       const contentType = `multipart/form-data; boundary=${boundary}`;
       const result = parseForm(body, contentType);
-      expect(result.fields.field1).toBe('value1');
+      expect(result.fields.field1).toBe("value1");
       expect(result.files).toHaveLength(0);
     });
-  
-    it('should handle missing boundary in content type', () => {
-      const contentType = 'multipart/form-data;';
-      expect(() => parseForm(body, contentType)).toThrowError('Missing boundary');
+
+    it("should handle missing boundary in content type", () => {
+      const contentType = "multipart/form-data;";
+      expect(() => parseForm(body, contentType)).toThrowError(
+        "Missing boundary"
+      );
     });
   });
 
@@ -185,26 +191,26 @@ describe("Utility Functions", () => {
 });
 
 describe("calculate Days Remaining", () => {
-  test('calculates remaining days correctly for a future date within the allocated period', () => {
+  test("calculates remaining days correctly for a future date within the allocated period", () => {
     const now = new Date();
     const startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000); // 30 days ago
     expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(60);
   });
-  
-  test('calculates remaining days correctly for a future date past the allocated period', () => {
+
+  test("calculates remaining days correctly for a future date past the allocated period", () => {
     const now = new Date();
     const startDate = new Date(now.getTime() - 100 * 24 * 60 * 60 * 1000); // 100 days ago
     expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(0);
   });
-  
-  test('calculates remaining days correctly for the start date being today', () => {
+
+  test("calculates remaining days correctly for the start date being today", () => {
     const startDate = new Date();
     expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(90);
   });
-  
-  test('calculates remaining days correctly for a date in the past beyond the allocated period', () => {
+
+  test("calculates remaining days correctly for a date in the past beyond the allocated period", () => {
     const now = new Date();
     const startDate = new Date(now.getTime() - 120 * 24 * 60 * 60 * 1000); // 120 days ago
     expect(calculateDaysRemaining(startDate.toISOString(), 90)).toBe(0);
   });
-})
+});
