@@ -114,7 +114,7 @@ describe("Utility Functions", () => {
     it("should read the stream to the end", async () => {
       const stream = {
         getReader: () => {
-          let chunks = [new Uint8Array([1, 2, 3])];
+          const chunks = [new Uint8Array([1, 2, 3])];
           return {
             async read() {
               return chunks.length > 0
