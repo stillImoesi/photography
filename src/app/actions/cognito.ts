@@ -25,7 +25,7 @@ export default async function createNewCognitorUser(
 
   let userExists = false;
   try {
-    const res = await cognitoClient.send(
+    await cognitoClient.send(
       new AdminGetUserCommand({
         UserPoolId: userPoolId,
         Username: email,

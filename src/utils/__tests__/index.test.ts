@@ -14,8 +14,8 @@ import {
 } from "..";
 
 // Mock the environment variables
-process.env.COGNITOR_LOGIN_URL = "https://login.example.com/";
-process.env.COGNITOR_LOGOUT_URL = "https://logout.example.com/";
+process.env.COGNITO_LOGIN_URL = "https://login.example.com/";
+process.env.COGNITO_LOGOUT_URL = "https://logout.example.com/";
 process.env.AWS_ACCESS_KEY_ID = "testAccessKeyId";
 process.env.AWS_SECRET_ACCESS_KEY = "testSecretAccessKey";
 
