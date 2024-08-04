@@ -27,10 +27,7 @@ describe('ClientOnly Component', () => {
     expect(getByText('Peter Imoesi')).toBeInTheDocument();
     expect(getByText('PHOTOGRAPHY STUDIO')).toBeInTheDocument();
     expect(getByText('Book Now')).toBeInTheDocument();
-    expect(getByText('© 2035 by Peter Imoesi. Powered and secured by Vercel')).toBeInTheDocument();
-    expect(getByText('Facebook')).toBeInTheDocument();
-    expect(getByText('Instagram')).toBeInTheDocument();
-    expect(getByText('Twitter')).toBeInTheDocument();
+    expect(getByText('© 2024 by Peter Imoesi')).toBeInTheDocument();
   });
 
   it('handles "Book Now" link click', async () => {

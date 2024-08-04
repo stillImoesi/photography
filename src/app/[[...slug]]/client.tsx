@@ -14,9 +14,14 @@ import Contact from "src/components/Contact";
 import Gallery from "src/components/Gallery";
 import BackgroundCarousel from "src/components/BackgroundCarousel";
 import TopMenu from "src/components/TopMenu";
+import { LocalImages } from "src/utils/type";
+import Stories from "src/components/Stories";
 
-export function ClientOnly(props) {
+interface Props {
+  images: LocalImages[];
+}
 
+export function ClientOnly(props: Props) {
   return (
     <>
       <TopMenu />
@@ -71,7 +76,7 @@ export function ClientOnly(props) {
                 <Link
                   href="#contact"
                   variant="inherit"
-                  sx={{ color: "black", textDecoration: "none" }}
+                  sx={{ color: { xs: 'white', md: "black"}, textDecoration: "none" }}
                 >
                   Book Now
                 </Link>
@@ -92,13 +97,8 @@ export function ClientOnly(props) {
       </Box>
 
       <Container>
-        <Box marginTop={"20px"}>
-          <Typography variant="h4" component="h2" gutterBottom>
-            Gallery
-          </Typography>
-        </Box>
-        <Gallery images={props.location} />
-        {/* <Studio images={props.studio} /> */}
+        <Stories />
+        <Gallery images={props.images} />
         <Services />
         <Contact />
       </Container>
@@ -109,17 +109,12 @@ export function ClientOnly(props) {
           color: "white",
           textAlign: "center",
           padding: 2,
-          marginTop: 4,
+          marginTop: 1
         }}
       >
         <Typography variant="body2">
-          &copy; 2035 by Peter Imoesi. Powered and secured by Vercel
+          &copy; 2024 by Peter Imoesi
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 1 }}>
-          <Button color="inherit">Facebook</Button>
-          <Button color="inherit">Instagram</Button>
-          <Button color="inherit">Twitter</Button>
-        </Box>
       </Box>
     </>
   );

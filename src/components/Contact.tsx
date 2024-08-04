@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, Link } from "@mui/material";
 import whatsApp from '../assets/WhatsAppButtonGreenSmall.png'
 import Input from '@mui/joy/Input';
+import Instragram from "../assets/instagram.jpg";
 
 const InspirationGenerator: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -24,7 +25,7 @@ const InspirationGenerator: React.FC = () => {
         borderRadius: 2,
         boxShadow: 3,
         textAlign: "center",
-        margin: "40px 0",
+        margin: "40px 0 0 0",
       }}
     >
       <Typography variant="h4" component="h2" gutterBottom>
@@ -43,6 +44,23 @@ const InspirationGenerator: React.FC = () => {
           <img src={whatsApp.src} alt="sent message via whatsapp" style={{ maxWidth: '250px' }}/>
         </Link>
       </form>
+      <Box
+        sx={{
+          backgroundColor: "black",
+          color: "white",
+          textAlign: "center",
+          padding: 2
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: 1 }}>
+          <Link href="https://www.instagram.com/stillpeterstudio?igsh=aTR4MXgwOTh5Nnhx&utm_source=qr">
+            <img
+              src={Instragram.src}
+              style={{ width: "200px", height: "200px", borderRadius: "12.5%" }}
+            />
+          </Link>
+        </Box>
+      </Box>
     </Box>
   );
 };
