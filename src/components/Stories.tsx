@@ -51,7 +51,7 @@ const Stories = () => {
             >
               <ListItem sx={listItemSty}>
                 <RenderListItemText
-                  primary="Event and Party"
+                  primary="Events and parties"
                   // secondary="Book a session and get the best studio photos"
                 />
                 <ArrowRightIcon />
@@ -73,7 +73,7 @@ const Stories = () => {
             >
             <ListItem sx={listItemSty}>
               <RenderListItemText
-                primary="Company / team retreat"
+                primary="Team retreats / events"
                 // secondary="Book a session and get the best studio photos"
               />
               <ArrowRightIcon />
