@@ -30,7 +30,15 @@ export default function Page({
   return (
     <>
       <RedirectToQuery target={"create-user"} />
-      <CreateUserForm />
+      {
+        idToken ? (
+          <CreateUserForm />) : (
+          <div>
+            <h1>Unauthorized</h1>
+            <p>You are not authorized to access this page.</p>
+          </div>
+          )
+      }
     </>
   );
 }
