@@ -46,9 +46,9 @@ export async function POST(req) {
         Key: `albums/${email}/${title}/preview/${file.name}`,
         Body: buffer,
         ContentType: file.type || mime.lookup(file.name),
-        Metadata: {
-          "Content-Disposition": "attachment",
-        },
+        // Metadata: {
+        //   "Content-Disposition": "attachment",
+        // },
         Tagging: `expiration=${new Date(
           Date.now() + 30 * 24 * 60 * 60 * 1000
         ).toISOString()}`, // 30 days expiration
